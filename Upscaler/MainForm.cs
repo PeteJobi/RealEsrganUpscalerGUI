@@ -42,7 +42,7 @@ namespace Upscaler
         private void SelectFile_Click(object sender, EventArgs e)
         {
             openFileDialog.Title = "Select one or multiple images and/or videos";
-            openFileDialog.Filter = $"Image {(videoSupported ? "and Video " : "")}Files|" + string.Join(";", allowedExts.Select(e => $"*.{e}"));
+            openFileDialog.Filter = $"Image {(videoSupported ? "and Video " : "")}Files|" + string.Join(";", allowedExts.Select(e => $"*{e}"));
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
             PrepareUI();
