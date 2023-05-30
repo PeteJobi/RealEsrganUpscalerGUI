@@ -37,9 +37,7 @@ namespace Upscaler
             openFileDialog.Filter = "Image and Video Files|*.jpg;*.jpeg;*.png;*.mkv;*.mp4";
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-            fileDialogPanel.Hide();
-            selectLabel.Hide();
-            fileNameLabel.Show();
+            PrepareUI();
             fileNameLabel.Text = Path.GetFileName(openFileDialog.FileName);
             if (openFileDialog.FileNames.Length > 1) 
                 fileNameLabel.Text += $" and {openFileDialog.FileNames.Length - 1} others";
@@ -51,9 +49,7 @@ namespace Upscaler
             folderBrowserDialog.Description = "Select a folder that contains images and/or videos";
             folderBrowserDialog.UseDescriptionForTitle = true;
             if (folderBrowserDialog.ShowDialog() != DialogResult.OK) return;
-            fileDialogPanel.Hide();
-            selectLabel.Hide();
-            fileNameLabel.Show();
+            PrepareUI();
             fileNameLabel.Text = Path.GetFileName(folderBrowserDialog.SelectedPath);
             string[] filePaths = Directory.GetFiles(folderBrowserDialog.SelectedPath).Where(p => allowedExts.Contains(Path.GetExtension(p))).ToArray();
             if(filePaths.Length == 0)
@@ -62,6 +58,15 @@ namespace Upscaler
                 return;
             }
             ProcessFiles(filePaths);
+        }
+
+        void PrepareUI()
+        {
+            fileDialogPanel.Hide();
+            selectLabel.Hide();
+            fileNameLabel.Show();
+            mediaTypePanel.Enabled = false;
+            animeScaleLevelPanel.Enabled = false;
         }
 
         void ProcessFiles(string[] fileNames)
@@ -195,7 +200,7 @@ namespace Upscaler
         {
             Invoke(() =>
             {
-                progressLabel.Text = $"{Math.Round(currentTime / totalDuration * 100, 2)} %";
+                progressLabel.Text = $"{currentTime:hh\\:mm\\:ss}/{totalDuration:hh\\:mm\\:ss}: {Math.Round(currentTime / totalDuration * 100, 2)} %";
                 currentActionLabel.Text = isMerging ? "Merging frames into video" : "Breaking video into frames";
                 int breakMergeProgressMaxForOverall = (int)((double)progressMax / (totalFilesCount * breakMergeSegmentFactor));
                 currentActionProgressBar.Value = (isMerging ? (progressMax - breakMergeProgressMax) : 0) + (int)(currentTime / totalDuration * breakMergeProgressMax);
@@ -235,6 +240,8 @@ namespace Upscaler
             fileNameLabel.Hide();
             overallProgressBar.Value = 0;
             currentActionProgressBar.Value = 0;
+            mediaTypePanel.Enabled = true;
+            animeScaleLevelPanel.Enabled = true;
         }
 
         private async void CancelButton_Click(object? sender, EventArgs e)
@@ -243,11 +250,11 @@ namespace Upscaler
             hasBeenKilled = true;
             cancelButton.Click -= CancelButton_Click;
             Reset(sender, e);
-            hasBeenKilled = false;
             currentProcess = null;
             await Task.Delay(1000);
             Directory.Delete(frameFolders.InputFolder, true);
             Directory.Delete(frameFolders.OutputFolder, true);
+            hasBeenKilled = false;
             frameFolders = null;
         }
 

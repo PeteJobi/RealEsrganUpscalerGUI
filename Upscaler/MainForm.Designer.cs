@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.fileDialogPanel = new System.Windows.Forms.Panel();
             this.selectFolderButton = new System.Windows.Forms.Button();
             this.selectFilesButton = new System.Windows.Forms.Button();
@@ -43,7 +44,7 @@
             this.currentActionLabel = new System.Windows.Forms.Label();
             this.selectLabel = new System.Windows.Forms.Label();
             this.animeRadioButton = new System.Windows.Forms.RadioButton();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.mediaTypePanel = new System.Windows.Forms.Panel();
             this.realisticRadioButton = new System.Windows.Forms.RadioButton();
             this.label2 = new System.Windows.Forms.Label();
             this.animeScaleLevelPanel = new System.Windows.Forms.Panel();
@@ -53,7 +54,7 @@
             this.animeScaleLevelLabel = new System.Windows.Forms.Label();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.fileDialogPanel.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.mediaTypePanel.SuspendLayout();
             this.animeScaleLevelPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -204,14 +205,14 @@
             this.animeRadioButton.UseVisualStyleBackColor = true;
             this.animeRadioButton.CheckedChanged += new System.EventHandler(this.AnimeRadioButton_CheckedChanged);
             // 
-            // panel1
+            // mediaTypePanel
             // 
-            this.panel1.Controls.Add(this.realisticRadioButton);
-            this.panel1.Controls.Add(this.animeRadioButton);
-            this.panel1.Location = new System.Drawing.Point(310, 71);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(174, 27);
-            this.panel1.TabIndex = 6;
+            this.mediaTypePanel.Controls.Add(this.realisticRadioButton);
+            this.mediaTypePanel.Controls.Add(this.animeRadioButton);
+            this.mediaTypePanel.Location = new System.Drawing.Point(310, 71);
+            this.mediaTypePanel.Name = "mediaTypePanel";
+            this.mediaTypePanel.Size = new System.Drawing.Size(174, 27);
+            this.mediaTypePanel.TabIndex = 6;
             // 
             // realisticRadioButton
             // 
@@ -300,7 +301,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 341);
             this.Controls.Add(this.animeScaleLevelPanel);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.mediaTypePanel);
             this.Controls.Add(this.currentActionLabel);
             this.Controls.Add(this.currentFileLabel);
             this.Controls.Add(this.progressLabel);
@@ -315,14 +316,15 @@
             this.Controls.Add(this.fileNameLabel);
             this.Controls.Add(this.fileDialogPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MainForm";
             this.Text = "Real-ESRGAN Upscaler";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.fileDialogPanel.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.mediaTypePanel.ResumeLayout(false);
+            this.mediaTypePanel.PerformLayout();
             this.animeScaleLevelPanel.ResumeLayout(false);
             this.animeScaleLevelPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -347,7 +349,7 @@
         private Label currentActionLabel;
         private Label selectLabel;
         private RadioButton animeRadioButton;
-        private Panel panel1;
+        private Panel mediaTypePanel;
         private RadioButton realisticRadioButton;
         private Label label2;
         private Panel animeScaleLevelPanel;

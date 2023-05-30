@@ -10,8 +10,8 @@ namespace Upscaler
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            //AppDomain currentDomain = AppDomain.CurrentDomain;
-            //currentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExceptionHandler);
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExceptionHandler);
 
             ApplicationConfiguration.Initialize();
             Application.Run(new MainForm());
@@ -20,7 +20,7 @@ namespace Upscaler
         static void ExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
             Exception e = (Exception)args.ExceptionObject;
-            MessageBox.Show($"An error occurred\n\n{e}");
+            //MessageBox.Show($"An error occurred\n\n{e}");
         }
     }
 }
