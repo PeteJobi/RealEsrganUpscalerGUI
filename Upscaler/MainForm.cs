@@ -6,14 +6,17 @@ namespace Upscaler
 {
     public partial class MainForm : Form
     {
-        string realEsrganPath = @"realesrgan-ncnn-vulkan.exe";
-        string ffmpegPath = @"ffmpeg.exe";
+        const string realEsrganPath = @"realesrgan-ncnn-vulkan.exe";
+        const string ffmpegPath = @"ffmpeg.exe";
         const int progressMax = 1_000_000;
         const int breakMergeSegmentFactor = 10; //The parts of the overall progress dedicated to breaking videos and merging frames. Assuming progressMax is 100, 10 means 10-80-10 and 5 means 5-90-5
         const int breakMergeProgressMax = progressMax / breakMergeSegmentFactor;
-        string[] allowedExts = new[] { ".mkv", ".mp4", ".jpg", ".jpeg", ".png" };
-        bool hasBeenKilled = false;
-        bool isPaused = false;
+        static readonly string[] imageExts = new[] { ".jpg", ".jpeg", ".png" };
+        static readonly string[] videoExts = new[] { ".mkv", ".mp4" };
+        readonly string[] allowedExts = imageExts;
+        bool videoSupported;
+        bool hasBeenKilled;
+        bool isPaused;
         FrameFolders? frameFolders;
         Process? currentProcess;
         public MainForm()
@@ -22,6 +25,11 @@ namespace Upscaler
             realisticRadioButton.Checked = true;
             x2radioButton.Checked = true;
             overallProgressBar.Maximum = currentActionProgressBar.Maximum = progressMax;
+            if (File.Exists(ffmpegPath))
+            {
+                videoSupported = true;
+                allowedExts = allowedExts.Concat(videoExts).ToArray();
+            }
             Reset(null, EventArgs.Empty);
         }
 
@@ -34,7 +42,7 @@ namespace Upscaler
         private void SelectFile_Click(object sender, EventArgs e)
         {
             openFileDialog.Title = "Select one or multiple images and/or videos";
-            openFileDialog.Filter = "Image and Video Files|*.jpg;*.jpeg;*.png;*.mkv;*.mp4";
+            openFileDialog.Filter = $"Image {(videoSupported ? "and Video " : "")}Files|" + string.Join(";", allowedExts.Select(e => $"*.{e}"));
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
             PrepareUI();
@@ -93,7 +101,7 @@ namespace Upscaler
         void UpscaleFile(string fileName, int currentFileIndex, int totalFilesCount, Action done)
         {
             string extension = Path.GetExtension(fileName);
-            if (new string[] { ".mkv", ".mp4" }.Contains(extension))
+            if (videoExts.Contains(extension))
             {
                 frameFolders = GetFrameFolders(fileName);
                 TimeSpan duration = TimeSpan.MinValue;
@@ -346,15 +354,7 @@ namespace Upscaler
         [Flags]
         public enum ThreadAccess : int
         {
-            TERMINATE = (0x0001),
-            SUSPEND_RESUME = (0x0002),
-            GET_CONTEXT = (0x0008),
-            SET_CONTEXT = (0x0010),
-            SET_INFORMATION = (0x0020),
-            QUERY_INFORMATION = (0x0040),
-            SET_THREAD_TOKEN = (0x0080),
-            IMPERSONATE = (0x0100),
-            DIRECT_IMPERSONATION = (0x0200)
+            SUSPEND_RESUME = (0x0002)
         }
 
         [DllImport("kernel32.dll")]
@@ -417,13 +417,15 @@ namespace Upscaler
 
             const string message = "Are you sure that you would like to cancel the process?";
             const string caption = "Cancel upscale task";
-            SuspendProcess(currentProcess);
+            bool dontResume = false;
+            if (isPaused) dontResume = true;
+            else SuspendProcess(currentProcess);
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result != DialogResult.Yes)
             {
                 e.Cancel = true;
-                ResumeProcess(currentProcess);
+                if(!dontResume) ResumeProcess(currentProcess);
             }
             else
             {
