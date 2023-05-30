@@ -14,8 +14,8 @@ namespace Upscaler
         string[] allowedExts = new[] { ".mkv", ".mp4", ".jpg", ".jpeg", ".png" };
         bool hasBeenKilled = false;
         bool isPaused = false;
-        FrameFolders frameFolders;
-        Process currentProcess;
+        FrameFolders? frameFolders;
+        Process? currentProcess;
         public MainForm()
         {
             InitializeComponent();
@@ -90,7 +90,7 @@ namespace Upscaler
             string extension = Path.GetExtension(fileName);
             if (new string[] { ".mkv", ".mp4" }.Contains(extension))
             {
-                FrameFolders frameFolders = GetFrameFolders(fileName);
+                frameFolders = GetFrameFolders(fileName);
                 TimeSpan duration = TimeSpan.MinValue;
                 string? fps = null;
                 StartProcess(ffmpegPath, $"-i \"{fileName}\" -qscale:v 1 -qmin 1 -qmax 1 -vsync 0 \"{frameFolders.InputFolder}/frame%08d.png\"", null, (sender, args) =>
@@ -149,6 +149,7 @@ namespace Upscaler
                             IncrementBreakMergeProgress(duration, duration, currentFileIndex, totalFilesCount, true);
                             Directory.Delete(frameFolders.InputFolder, true);
                             Directory.Delete(frameFolders.OutputFolder, true);
+                            frameFolders = null;
                             done();
                         });
                     });
@@ -247,6 +248,7 @@ namespace Upscaler
             await Task.Delay(1000);
             Directory.Delete(frameFolders.InputFolder, true);
             Directory.Delete(frameFolders.OutputFolder, true);
+            frameFolders = null;
         }
 
         private void pauseButton_Click(object sender, EventArgs e)
@@ -331,7 +333,6 @@ namespace Upscaler
             FrameFolders frameFolders = new(Path.Combine(parentFolder, $"{inputName}_InputFrames"), Path.Combine(parentFolder, $"{inputName}_OutputFrames"));
             Directory.CreateDirectory(frameFolders.InputFolder);
             Directory.CreateDirectory(frameFolders.OutputFolder);
-            this.frameFolders = frameFolders;
             return frameFolders;
         }
 
@@ -393,7 +394,7 @@ namespace Upscaler
                     continue;
                 }
 
-                var suspendCount = 0;
+                int suspendCount;
                 do
                 {
                     suspendCount = ResumeThread(pOpenThread);
@@ -405,7 +406,7 @@ namespace Upscaler
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (currentProcess == null) return;
+            if (currentProcess == null || frameFolders == null) return;
 
             const string message = "Are you sure that you would like to cancel the process?";
             const string caption = "Cancel upscale task";
