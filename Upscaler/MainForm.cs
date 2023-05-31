@@ -17,6 +17,7 @@ namespace Upscaler
         bool videoSupported;
         bool hasBeenKilled;
         bool isPaused;
+        string pathForView;
         FrameFolders? frameFolders;
         Process? currentProcess;
         public MainForm()
@@ -42,10 +43,11 @@ namespace Upscaler
         private void SelectFile_Click(object sender, EventArgs e)
         {
             openFileDialog.Title = "Select one or multiple images and/or videos";
-            openFileDialog.Filter = $"Image {(videoSupported ? "and Video " : "")}Files|" + string.Join(";", allowedExts.Select(e => $"*.{e}"));
+            openFileDialog.Filter = $"Image {(videoSupported ? "and Video " : "")}Files|" + string.Join(";", allowedExts.Select(e => $"*{e}"));
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
             PrepareUI();
+            pathForView = GetOutputName(openFileDialog.FileName);
             fileNameLabel.Text = Path.GetFileName(openFileDialog.FileName);
             if (openFileDialog.FileNames.Length > 1) 
                 fileNameLabel.Text += $" and {openFileDialog.FileNames.Length - 1} others";
@@ -57,14 +59,15 @@ namespace Upscaler
             folderBrowserDialog.Description = "Select a folder that contains images and/or videos";
             folderBrowserDialog.UseDescriptionForTitle = true;
             if (folderBrowserDialog.ShowDialog() != DialogResult.OK) return;
-            PrepareUI();
-            fileNameLabel.Text = Path.GetFileName(folderBrowserDialog.SelectedPath);
             string[] filePaths = Directory.GetFiles(folderBrowserDialog.SelectedPath).Where(p => allowedExts.Contains(Path.GetExtension(p))).ToArray();
             if(filePaths.Length == 0)
             {
                 MessageBox.Show("The selected folder does not contain any supported files");
                 return;
             }
+            PrepareUI();
+            pathForView = GetOutputName(folderBrowserDialog.SelectedPath);
+            fileNameLabel.Text = Path.GetFileName(folderBrowserDialog.SelectedPath);
             ProcessFiles(filePaths);
         }
 
@@ -209,7 +212,7 @@ namespace Upscaler
             Invoke(() =>
             {
                 progressLabel.Text = $"{currentTime:hh\\:mm\\:ss}/{totalDuration:hh\\:mm\\:ss}: {Math.Round(currentTime / totalDuration * 100, 2)} %";
-                currentActionLabel.Text = isMerging ? "Merging frames into video" : "Breaking video into frames";
+                currentActionLabel.Text = isMerging ? "Merging frames into video..." : "Breaking video into frames...";
                 int breakMergeProgressMaxForOverall = (int)((double)progressMax / (totalFilesCount * breakMergeSegmentFactor));
                 currentActionProgressBar.Value = (isMerging ? (progressMax - breakMergeProgressMax) : 0) + (int)(currentTime / totalDuration * breakMergeProgressMax);
                 overallProgressBar.Value = (int)((double)currentFileIndex / totalFilesCount * progressMax) 
@@ -228,7 +231,9 @@ namespace Upscaler
                 cancelButton.Text = "Retry";
                 cancelButton.Click -= CancelButton_Click;
                 cancelButton.Click += Reset;
-                pauseButton.Enabled = false;
+                pauseButton.Text = "View";
+                pauseButton.Click -= pauseButton_Click;
+                pauseButton.Click += ViewFiles;
             });
         }
 
@@ -243,6 +248,8 @@ namespace Upscaler
             pauseButton.Text = "Pause";
             cancelButton.Click += CancelButton_Click;
             cancelButton.Click -= Reset;
+            pauseButton.Click += pauseButton_Click;
+            pauseButton.Click -= ViewFiles;
             fileDialogPanel.Show();
             selectLabel.Show();
             fileNameLabel.Hide();
@@ -266,7 +273,15 @@ namespace Upscaler
             frameFolders = null;
         }
 
-        private void pauseButton_Click(object sender, EventArgs e)
+        private void ViewFiles(object? sender, EventArgs e)
+        {
+            ProcessStartInfo info = new ProcessStartInfo();
+            info.FileName = "explorer";
+            info.Arguments = $"/e, /select, \"{pathForView}\"";
+            Process.Start(info);
+        }
+
+        private void pauseButton_Click(object? sender, EventArgs e)
         {
             if (isPaused)
             {
@@ -433,6 +448,29 @@ namespace Upscaler
                 Directory.Delete(frameFolders.InputFolder, true);
                 Directory.Delete(frameFolders.OutputFolder, true);
             }
+        }
+
+        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        {
+            if (!fileDialogPanel.Visible) return;
+            e.Effect = DragDropEffects.All;
+        }
+
+        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        {
+            if (!fileDialogPanel.Visible) return;
+            string[] files = ((string[])e.Data.GetData(DataFormats.FileDrop, false)).Where(p => allowedExts.Contains(Path.GetExtension(p))).ToArray();
+            if (files.Length == 0)
+            {
+                MessageBox.Show("None of the dropped files are supported");
+                return;
+            }
+            pathForView = GetOutputName(files[0]);
+            PrepareUI();
+            fileNameLabel.Text = Path.GetFileName(files[0]);
+            if (files.Length > 1)
+                fileNameLabel.Text += $" and {files.Length - 1} others";
+            ProcessFiles(files);
         }
     }
 

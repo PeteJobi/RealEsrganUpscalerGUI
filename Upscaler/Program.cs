@@ -20,7 +20,7 @@ namespace Upscaler
         static void ExceptionHandler(object sender, UnhandledExceptionEventArgs args)
         {
             Exception e = (Exception)args.ExceptionObject;
-            //MessageBox.Show($"An error occurred\n\n{e}");
+            MessageBox.Show($"An error occurred\n\n{e}");
         }
     }
 }

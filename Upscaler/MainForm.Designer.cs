@@ -134,7 +134,6 @@
             this.pauseButton.TabIndex = 8;
             this.pauseButton.Text = "Pause";
             this.pauseButton.UseVisualStyleBackColor = true;
-            this.pauseButton.Click += new System.EventHandler(this.pauseButton_Click);
             // 
             // totalFileCountLabel
             // 
@@ -297,6 +296,7 @@
             // 
             // MainForm
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 341);
@@ -321,6 +321,8 @@
             this.Name = "MainForm";
             this.Text = "Real-ESRGAN Upscaler";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
             this.fileDialogPanel.ResumeLayout(false);
             this.mediaTypePanel.ResumeLayout(false);
             this.mediaTypePanel.PerformLayout();
