@@ -26,6 +26,3 @@ For animation videos, you can decide the upscale quality to use. **X2** means th
 When you're done with the parameters, click **Select files** to select multiple files to be upscaled or **Select folder** to upscale every image and video in that folder. You can also drag and drop files into the window.
 
 NOTE: Depending on your GPU and CPU, upscaling large videos can take very long.
-
-## Known issues
-If your resolution scale is higher than 100%, the software may not render correctly and some UI controls may be out of view. There is no real fix for this. It's a limitation of Windows Forms.
