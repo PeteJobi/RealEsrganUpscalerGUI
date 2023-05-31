@@ -112,6 +112,7 @@ namespace Upscaler
                 StartProcess(ffmpegPath, $"-i \"{fileName}\" -qscale:v 1 -qmin 1 -qmax 1 -vsync 0 \"{frameFolders.InputFolder}/frame%08d.png\"", null, (sender, args) =>
                 {
                     if (string.IsNullOrWhiteSpace(args.Data)) return;
+                    Console.WriteLine(args.Data);
                     if (duration == TimeSpan.MinValue)
                     {
                         MatchCollection matchCollection = Regex.Matches(args.Data, @"\s+?Duration:\s(\d{2}:\d{2}:\d{2}\.\d{2}).+");
@@ -120,7 +121,7 @@ namespace Upscaler
                     }
                     else if (fps == null) //fps information should come immediately after the duration line
                     {
-                        MatchCollection matchCollection = Regex.Matches(args.Data, @"(\d+.\d+)\sfps");
+                        MatchCollection matchCollection = Regex.Matches(args.Data, @"(\d+.?\d+)\sfps");
                         if (matchCollection.Count == 0) throw new ArgumentException("FPS information not found");
                         fps = matchCollection[0].Groups[1].Value;
                     }
