@@ -78,6 +78,7 @@ namespace Upscaler
             fileNameLabel.Show();
             mediaTypePanel.Enabled = false;
             animeScaleLevelPanel.Enabled = false;
+            hasBeenKilled = false;
         }
 
         void ProcessFiles(string[] fileNames)
@@ -118,11 +119,11 @@ namespace Upscaler
                         if (matchCollection.Count == 0) return;
                         duration = TimeSpan.Parse(matchCollection[0].Groups[1].Value);
                     }
-                    else if (fps == null) //fps information should come immediately after the duration line
+                    else if (fps == null)
                     {
                         MatchCollection matchCollection = Regex.Matches(args.Data, @"(\d+.?\d+)\sfps");
                         if (matchCollection.Count == 0) return;
-                        fps = matchCollection[0].Groups[1].Value;
+                        fps = /*((double)24000 / 1001).ToString();*/ matchCollection[0].Groups[1].Value;
                     }
                     else
                     {
@@ -154,7 +155,7 @@ namespace Upscaler
 
                         string outputName = GetOutputName(fileName);
                         File.Delete(outputName);
-                        StartProcess(ffmpegPath, $"-r {fps} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1:a:0 -c:a copy -c:v libx264 -r 23.98 -pix_fmt yuv420p \"{outputName}\"", null, (sender, args) =>
+                        StartProcess(ffmpegPath, $"-r {fps} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1:a:0 -c:a copy -c:v libx264 -r {fps} -pix_fmt yuv420p \"{outputName}\"", null, (sender, args) =>
                         {
                             if (string.IsNullOrWhiteSpace(args.Data)) return;
                             MatchCollection matchCollection = Regex.Matches(args.Data, @"^frame=\s+\d+\s.+?time=(\d{2}:\d{2}:\d{2}\.\d{2}).+");
@@ -188,10 +189,16 @@ namespace Upscaler
             }
         }
 
-        void IncrementUpscaleProgress(string percent, int currentFrame, int totalFrames, int currentFileIndex, int totalFilesCount, bool isVideo)
+        void IncrementUpscaleProgress(string percentString, int currentFrame, int totalFrames, int currentFileIndex, int totalFilesCount, bool isVideo)
         {
             Invoke(() =>
             {
+                if(!double.TryParse(percentString, out double percent))
+                {
+                    MessageBox.Show($"Something went wrong with the operation\n\n{percentString}");
+                    Cancel();
+                    return;
+                }
                 progressLabel.Text = $"{percent}%";
                 if (isVideo) progressLabel.Text = $"{currentFrame}/{totalFrames} frames: " + progressLabel.Text;
                 currentActionLabel.Text = isVideo ? "Upscaling video frames..." : "Upscaling...";
@@ -199,11 +206,11 @@ namespace Upscaler
                 int usedSegment = progressMax - (unusedSegment * 2);
                 int unusedSegmentForOverall = isVideo ? (int)(progressMax / (totalFilesCount * breakMergeSegmentFactor)) : 0;
                 int usedSegmentForOverall = progressMax / totalFilesCount - (unusedSegmentForOverall * 2);
-                currentActionProgressBar.Value = unusedSegment + (int)((double)currentFrame / totalFrames * usedSegment) + (int)(double.Parse(percent) / 100 * (usedSegment / totalFrames));
+                currentActionProgressBar.Value = unusedSegment + (int)((double)currentFrame / totalFrames * usedSegment) + (int)(percent / 100 * (usedSegment / totalFrames));
                 overallProgressBar.Value = (int)((double)currentFileIndex / totalFilesCount * progressMax)
                     + unusedSegmentForOverall
                     + (int)((double)currentFrame / totalFrames * usedSegmentForOverall)
-                    + (int)(double.Parse(percent) / 100 * (usedSegmentForOverall / totalFrames));
+                    + (int)(percent / 100 * (usedSegmentForOverall / totalFrames));
             });
         }
 
@@ -259,18 +266,37 @@ namespace Upscaler
             animeScaleLevelPanel.Enabled = true;
         }
 
-        private async void CancelButton_Click(object? sender, EventArgs e)
+        private void CancelButton_Click(object? sender, EventArgs e)
+        {
+            if (ConfirmCancel()) Cancel();
+        }
+
+        void Cancel()
         {
             currentProcess.Kill();
             hasBeenKilled = true;
             cancelButton.Click -= CancelButton_Click;
-            Reset(sender, e);
+            Reset(null, EventArgs.Empty);
             currentProcess = null;
-            await Task.Delay(1000);
-            Directory.Delete(frameFolders.InputFolder, true);
-            Directory.Delete(frameFolders.OutputFolder, true);
-            hasBeenKilled = false;
-            frameFolders = null;
+            //if (e != EventArgs.Empty) await Task.Delay(1000);
+            if(frameFolders != null)
+            {
+                Directory.Delete(frameFolders.InputFolder, true);
+                Directory.Delete(frameFolders.OutputFolder, true);
+                frameFolders = null;
+            }
+        }
+
+        bool ConfirmCancel()
+        {
+            const string message = "Are you sure that you would like to cancel the process?";
+            const string caption = "Cancel upscale task";
+            //bool dontResume = false;
+            if (!isPaused) SuspendProcess(currentProcess);
+            var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            bool confirm = result == DialogResult.Yes;
+            if (!confirm && !isPaused) ResumeProcess(currentProcess);
+            return confirm;
         }
 
         private void ViewFiles(object? sender, EventArgs e)
@@ -428,26 +454,10 @@ namespace Upscaler
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (currentProcess == null || frameFolders == null) return;
+            if (currentProcess == null) return;
 
-            const string message = "Are you sure that you would like to cancel the process?";
-            const string caption = "Cancel upscale task";
-            bool dontResume = false;
-            if (isPaused) dontResume = true;
-            else SuspendProcess(currentProcess);
-            var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (result != DialogResult.Yes)
-            {
-                e.Cancel = true;
-                if(!dontResume) ResumeProcess(currentProcess);
-            }
-            else
-            {
-                CancelButton_Click(null, EventArgs.Empty);
-                Directory.Delete(frameFolders.InputFolder, true);
-                Directory.Delete(frameFolders.OutputFolder, true);
-            }
+            if (ConfirmCancel()) Cancel();
+            else e.Cancel = true;
         }
 
         private void MainForm_DragEnter(object sender, DragEventArgs e)
