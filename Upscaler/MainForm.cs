@@ -121,9 +121,9 @@ namespace Upscaler
                     }
                     else if (fps == null)
                     {
-                        MatchCollection matchCollection = Regex.Matches(args.Data, @"(\d+.?\d+)\sfps");
+                        MatchCollection matchCollection = Regex.Matches(args.Data, @"(\d+.?\d+)\stbr");
                         if (matchCollection.Count == 0) return;
-                        fps = /*((double)24000 / 1001).ToString();*/ matchCollection[0].Groups[1].Value;
+                        fps = matchCollection[0].Groups[1].Value;
                     }
                     else
                     {
