@@ -53,6 +53,9 @@
             this.x2radioButton = new System.Windows.Forms.RadioButton();
             this.scaleLevelLabel = new System.Windows.Forms.Label();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.videoBreakProgressBar = new System.Windows.Forms.ProgressBar();
+            this.videoMergeProgressBar = new System.Windows.Forms.ProgressBar();
+            this.videoUpscaleProgresslabel = new System.Windows.Forms.Label();
             this.fileDialogPanel.SuspendLayout();
             this.mediaTypePanel.SuspendLayout();
             this.scaleLevelPanel.SuspendLayout();
@@ -172,9 +175,9 @@
             // 
             this.currentActionLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.currentActionLabel.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.currentActionLabel.Location = new System.Drawing.Point(360, 278);
+            this.currentActionLabel.Location = new System.Drawing.Point(440, 278);
             this.currentActionLabel.Name = "currentActionLabel";
-            this.currentActionLabel.Size = new System.Drawing.Size(320, 20);
+            this.currentActionLabel.Size = new System.Drawing.Size(240, 20);
             this.currentActionLabel.TabIndex = 4;
             this.currentActionLabel.Text = "Breaking video into frames";
             this.currentActionLabel.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -293,6 +296,33 @@
     "resolution, but will take much longer than x2";
             this.scaleLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // videoBreakProgressBar
+            // 
+            this.videoBreakProgressBar.Location = new System.Drawing.Point(12, 301);
+            this.videoBreakProgressBar.Name = "videoBreakProgressBar";
+            this.videoBreakProgressBar.Size = new System.Drawing.Size(67, 21);
+            this.videoBreakProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.videoBreakProgressBar.TabIndex = 2;
+            // 
+            // videoMergeProgressBar
+            // 
+            this.videoMergeProgressBar.Location = new System.Drawing.Point(613, 301);
+            this.videoMergeProgressBar.Name = "videoMergeProgressBar";
+            this.videoMergeProgressBar.Size = new System.Drawing.Size(67, 21);
+            this.videoMergeProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.videoMergeProgressBar.TabIndex = 2;
+            // 
+            // videoUpscaleProgresslabel
+            // 
+            this.videoUpscaleProgresslabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.videoUpscaleProgresslabel.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.videoUpscaleProgresslabel.Location = new System.Drawing.Point(204, 278);
+            this.videoUpscaleProgresslabel.Name = "videoUpscaleProgresslabel";
+            this.videoUpscaleProgresslabel.Size = new System.Drawing.Size(295, 20);
+            this.videoUpscaleProgresslabel.TabIndex = 4;
+            this.videoUpscaleProgresslabel.Text = "33.33%";
+            this.videoUpscaleProgresslabel.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -301,12 +331,15 @@
             this.ClientSize = new System.Drawing.Size(784, 341);
             this.Controls.Add(this.scaleLevelPanel);
             this.Controls.Add(this.mediaTypePanel);
+            this.Controls.Add(this.videoUpscaleProgresslabel);
             this.Controls.Add(this.currentActionLabel);
             this.Controls.Add(this.currentFileLabel);
             this.Controls.Add(this.progressLabel);
             this.Controls.Add(this.totalFileCountLabel);
             this.Controls.Add(this.pauseButton);
             this.Controls.Add(this.cancelButton);
+            this.Controls.Add(this.videoMergeProgressBar);
+            this.Controls.Add(this.videoBreakProgressBar);
             this.Controls.Add(this.currentActionProgressBar);
             this.Controls.Add(this.overallProgressBar);
             this.Controls.Add(this.scaleLevelLabel);
@@ -358,5 +391,8 @@
         private RadioButton x2radioButton;
         private Label scaleLevelLabel;
         private FolderBrowserDialog folderBrowserDialog;
+        private ProgressBar videoBreakProgressBar;
+        private ProgressBar videoMergeProgressBar;
+        private Label videoUpscaleProgresslabel;
     }
 }

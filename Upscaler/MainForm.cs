@@ -27,7 +27,7 @@ namespace Upscaler
             InitializeComponent();
             realisticRadioButton.Checked = true;
             x2radioButton.Checked = true;
-            overallProgressBar.Maximum = currentActionProgressBar.Maximum = progressMax;
+            overallProgressBar.Maximum = currentActionProgressBar.Maximum = videoBreakProgressBar.Maximum = videoMergeProgressBar.Maximum = progressMax;
             if (File.Exists(ffmpegPath))
             {
                 videoSupported = true;
@@ -80,7 +80,7 @@ namespace Upscaler
             fileNameLabel.Show();
             mediaTypePanel.Enabled = false;
             scaleLevelPanel.Enabled = false;
-            Size = new Size(Size.Width, 380);
+            Height = 380;
 
             isProcessingFolder = folder;
             pathForView = isProcessingFolder ? paths[0] + UPSCALED_PREFIX : GetOutputName(paths[0]);
@@ -111,6 +111,7 @@ namespace Upscaler
             string extension = Path.GetExtension(fileName);
             if (videoExts.Contains(extension))
             {
+                ResetVideoUpscaleUI(true);
                 #region Break video into frames
                 frameFolders = GetFrameFolders(fileName);
                 TimeSpan duration = TimeSpan.MinValue;
@@ -154,7 +155,7 @@ namespace Upscaler
                     }
                 });
                 if (HasBeenKilled()) return false;
-                IncrementUpscaleProgress("100", c, numFrames, currentFileIndex, totalFilesCount, true);
+                IncrementUpscaleProgress("100", numFrames, numFrames, currentFileIndex, totalFilesCount, true);
                 #endregion
 
                 #region Merge frames into video
@@ -172,11 +173,12 @@ namespace Upscaler
                 IncrementBreakMergeProgress(duration, duration, currentFileIndex, totalFilesCount, true);
                 Directory.Delete(frameFolders.InputFolder, true);
                 Directory.Delete(frameFolders.OutputFolder, true);
-                frameFolders = null; 
+                frameFolders = null;
                 #endregion
             }
             else
             {
+                ResetVideoUpscaleUI(false);
                 await StartProcess(realEsrganPath, $"-i \"{fileName}\" -o \"{GetOutputName(fileName)}\" -n {GetModel(false)} -f png", null, (sender, args) =>
                 {
                     if (string.IsNullOrWhiteSpace(args.Data)) return;
@@ -205,11 +207,10 @@ namespace Upscaler
                 progressLabel.Text = $"{percent}%";
                 if (isVideo) progressLabel.Text = $"{currentFrame}/{totalFrames} frames: " + progressLabel.Text;
                 currentActionLabel.Text = isVideo ? "Upscaling video frames..." : "Upscaling...";
-                int unusedSegment = isVideo ? breakMergeProgressMax : 0;
-                int usedSegment = progressMax - (unusedSegment * 2);
+                if(isVideo) videoUpscaleProgresslabel.Text = $"{Math.Round((double)currentFrame / totalFrames * 100, 2)} %";
                 int unusedSegmentForOverall = isVideo ? (int)(progressMax / (totalFilesCount * breakMergeSegmentFactor)) : 0;
                 int usedSegmentForOverall = progressMax / totalFilesCount - (unusedSegmentForOverall * 2);
-                currentActionProgressBar.Value = unusedSegment + (int)((double)currentFrame / totalFrames * usedSegment) + (int)(percent / 100 * (usedSegment / totalFrames));
+                currentActionProgressBar.Value = Math.Min(progressMax, (int)((double)currentFrame / totalFrames * progressMax) + (int)(percent / 100 * (progressMax / totalFrames)));
                 overallProgressBar.Value = (int)((double)currentFileIndex / totalFilesCount * progressMax)
                     + unusedSegmentForOverall
                     + (int)((double)currentFrame / totalFrames * usedSegmentForOverall)
@@ -224,7 +225,9 @@ namespace Upscaler
                 progressLabel.Text = $"{currentTime:hh\\:mm\\:ss}/{totalDuration:hh\\:mm\\:ss}: {Math.Round(currentTime / totalDuration * 100, 2)} %";
                 currentActionLabel.Text = isMerging ? "Merging frames into video..." : "Breaking video into frames...";
                 int breakMergeProgressMaxForOverall = (int)((double)progressMax / (totalFilesCount * breakMergeSegmentFactor));
-                currentActionProgressBar.Value = (isMerging ? (progressMax - breakMergeProgressMax) : 0) + (int)(currentTime / totalDuration * breakMergeProgressMax);
+                //currentActionProgressBar.Value = (isMerging ? (progressMax - breakMergeProgressMax) : 0) + (int)(currentTime / totalDuration * breakMergeProgressMax);
+                ProgressBar progressBarToEdit = isMerging ? videoMergeProgressBar : videoBreakProgressBar;
+                progressBarToEdit.Value = (int)(currentTime / totalDuration * progressMax);
                 overallProgressBar.Value = (int)((double)currentFileIndex / totalFilesCount * progressMax) 
                     + (isMerging ? ((progressMax / totalFilesCount) - breakMergeProgressMaxForOverall) : 0) 
                     + (int)(currentTime / totalDuration * breakMergeProgressMaxForOverall);
@@ -246,7 +249,7 @@ namespace Upscaler
 
         private void Reset(object? sender, EventArgs e)
         {
-            Size = new Size(Size.Width, 230);
+            Height = 230;
             totalFileCountLabel.Text = string.Empty;
             currentFileLabel.Text = string.Empty;
             currentActionLabel.Text = string.Empty;
@@ -264,6 +267,19 @@ namespace Upscaler
             currentActionProgressBar.Value = 0;
             mediaTypePanel.Enabled = true;
             scaleLevelPanel.Enabled = true;
+            ResetVideoUpscaleUI(true);
+        }
+
+        void ResetVideoUpscaleUI(bool show)
+        {
+            currentActionProgressBar.Left = show ? 80 : overallProgressBar.Left;
+            currentActionProgressBar.Width = show ? 532 : overallProgressBar.Width;
+            videoUpscaleProgresslabel.Visible = show;
+            videoBreakProgressBar.Visible = show;
+            videoMergeProgressBar.Visible = show;
+            videoBreakProgressBar.Value = 0;
+            videoMergeProgressBar.Value = 0;
+            videoUpscaleProgresslabel.Text = string.Empty;
         }
 
         private void CancelButton_Click(object? sender, EventArgs e)
