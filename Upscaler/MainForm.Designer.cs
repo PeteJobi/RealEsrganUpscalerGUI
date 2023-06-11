@@ -47,15 +47,15 @@
             this.mediaTypePanel = new System.Windows.Forms.Panel();
             this.realisticRadioButton = new System.Windows.Forms.RadioButton();
             this.label2 = new System.Windows.Forms.Label();
-            this.animeScaleLevelPanel = new System.Windows.Forms.Panel();
+            this.scaleLevelPanel = new System.Windows.Forms.Panel();
             this.x4radioButton = new System.Windows.Forms.RadioButton();
             this.x3radioButton = new System.Windows.Forms.RadioButton();
             this.x2radioButton = new System.Windows.Forms.RadioButton();
-            this.animeScaleLevelLabel = new System.Windows.Forms.Label();
+            this.scaleLevelLabel = new System.Windows.Forms.Label();
             this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
             this.fileDialogPanel.SuspendLayout();
             this.mediaTypePanel.SuspendLayout();
-            this.animeScaleLevelPanel.SuspendLayout();
+            this.scaleLevelPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // fileDialogPanel
@@ -202,7 +202,6 @@
             this.animeRadioButton.TabStop = true;
             this.animeRadioButton.Text = "Animation";
             this.animeRadioButton.UseVisualStyleBackColor = true;
-            this.animeRadioButton.CheckedChanged += new System.EventHandler(this.AnimeRadioButton_CheckedChanged);
             // 
             // mediaTypePanel
             // 
@@ -237,15 +236,15 @@
             this.label2.Text = "What kind of image/video are you upscaling?";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // animeScaleLevelPanel
+            // scaleLevelPanel
             // 
-            this.animeScaleLevelPanel.Controls.Add(this.x4radioButton);
-            this.animeScaleLevelPanel.Controls.Add(this.x3radioButton);
-            this.animeScaleLevelPanel.Controls.Add(this.x2radioButton);
-            this.animeScaleLevelPanel.Location = new System.Drawing.Point(327, 130);
-            this.animeScaleLevelPanel.Name = "animeScaleLevelPanel";
-            this.animeScaleLevelPanel.Size = new System.Drawing.Size(132, 27);
-            this.animeScaleLevelPanel.TabIndex = 6;
+            this.scaleLevelPanel.Controls.Add(this.x4radioButton);
+            this.scaleLevelPanel.Controls.Add(this.x3radioButton);
+            this.scaleLevelPanel.Controls.Add(this.x2radioButton);
+            this.scaleLevelPanel.Location = new System.Drawing.Point(327, 130);
+            this.scaleLevelPanel.Name = "scaleLevelPanel";
+            this.scaleLevelPanel.Size = new System.Drawing.Size(132, 27);
+            this.scaleLevelPanel.TabIndex = 6;
             // 
             // x4radioButton
             // 
@@ -280,19 +279,19 @@
             this.x2radioButton.Text = "X2";
             this.x2radioButton.UseVisualStyleBackColor = true;
             // 
-            // animeScaleLevelLabel
+            // scaleLevelLabel
             // 
-            this.animeScaleLevelLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.scaleLevelLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.animeScaleLevelLabel.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.animeScaleLevelLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.animeScaleLevelLabel.Location = new System.Drawing.Point(12, 155);
-            this.animeScaleLevelLabel.Name = "animeScaleLevelLabel";
-            this.animeScaleLevelLabel.Size = new System.Drawing.Size(760, 15);
-            this.animeScaleLevelLabel.TabIndex = 1;
-            this.animeScaleLevelLabel.Text = "What level of upscaling would you like to use? X4 will upscale your animation vid" +
-    "eo to 4 times its resolution, but will take much longer than x2";
-            this.animeScaleLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.scaleLevelLabel.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.scaleLevelLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.scaleLevelLabel.Location = new System.Drawing.Point(12, 155);
+            this.scaleLevelLabel.Name = "scaleLevelLabel";
+            this.scaleLevelLabel.Size = new System.Drawing.Size(760, 15);
+            this.scaleLevelLabel.TabIndex = 1;
+            this.scaleLevelLabel.Text = "What level of upscaling would you like to use? X4 will upscale it to 4 times its " +
+    "resolution, but will take much longer than x2";
+            this.scaleLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // MainForm
             // 
@@ -300,7 +299,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 341);
-            this.Controls.Add(this.animeScaleLevelPanel);
+            this.Controls.Add(this.scaleLevelPanel);
             this.Controls.Add(this.mediaTypePanel);
             this.Controls.Add(this.currentActionLabel);
             this.Controls.Add(this.currentFileLabel);
@@ -310,7 +309,7 @@
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.currentActionProgressBar);
             this.Controls.Add(this.overallProgressBar);
-            this.Controls.Add(this.animeScaleLevelLabel);
+            this.Controls.Add(this.scaleLevelLabel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.selectLabel);
             this.Controls.Add(this.fileNameLabel);
@@ -326,8 +325,8 @@
             this.fileDialogPanel.ResumeLayout(false);
             this.mediaTypePanel.ResumeLayout(false);
             this.mediaTypePanel.PerformLayout();
-            this.animeScaleLevelPanel.ResumeLayout(false);
-            this.animeScaleLevelPanel.PerformLayout();
+            this.scaleLevelPanel.ResumeLayout(false);
+            this.scaleLevelPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -353,11 +352,11 @@
         private Panel mediaTypePanel;
         private RadioButton realisticRadioButton;
         private Label label2;
-        private Panel animeScaleLevelPanel;
+        private Panel scaleLevelPanel;
         private RadioButton x4radioButton;
         private RadioButton x3radioButton;
         private RadioButton x2radioButton;
-        private Label animeScaleLevelLabel;
+        private Label scaleLevelLabel;
         private FolderBrowserDialog folderBrowserDialog;
     }
 }

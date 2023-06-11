@@ -17,6 +17,14 @@
     <None Remove="models\realesr-animevideov3-x3.param" />
     <None Remove="models\realesr-animevideov3-x4.bin" />
     <None Remove="models\realesr-animevideov3-x4.param" />
+    <None Remove="models\realesrgan-x2plus-anime.bin" />
+    <None Remove="models\realesrgan-x2plus-anime.param" />
+    <None Remove="models\realesrgan-x2plus.bin" />
+    <None Remove="models\realesrgan-x2plus.param" />
+    <None Remove="models\realesrgan-x3plus-anime.bin" />
+    <None Remove="models\realesrgan-x3plus-anime.param" />
+    <None Remove="models\realesrgan-x3plus.bin" />
+    <None Remove="models\realesrgan-x3plus.param" />
     <None Remove="models\realesrgan-x4plus-anime.bin" />
     <None Remove="models\realesrgan-x4plus-anime.param" />
     <None Remove="models\realesrgan-x4plus.bin" />
@@ -44,6 +52,30 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="models\realesr-animevideov3-x4.param">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="models\realesrgan-x2plus-anime.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="models\realesrgan-x2plus-anime.param">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="models\realesrgan-x2plus.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="models\realesrgan-x2plus.param">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="models\realesrgan-x3plus-anime.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="models\realesrgan-x3plus-anime.param">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="models\realesrgan-x3plus.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="models\realesrgan-x3plus.param">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="models\realesrgan-x4plus-anime.bin">
