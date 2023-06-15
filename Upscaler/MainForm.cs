@@ -161,7 +161,7 @@ namespace Upscaler
                 #region Merge frames into video
                 string outputName = GetOutputName(fileName);
                 File.Delete(outputName);
-                await StartProcess(ffmpegPath, $"-r {fps} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1:a:0 -c:a copy -c:v libx264 -r {fps} -pix_fmt yuv420p \"{outputName}\"", null, (sender, args) =>
+                await StartProcess(ffmpegPath, $"-r {fps} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1 -map -1:v -c:a copy -c:v libx264 -r {fps} -pix_fmt yuv420p \"{outputName}\"", null, (sender, args) =>
                 {
                     if (string.IsNullOrWhiteSpace(args.Data)) return;
                     MatchCollection matchCollection = Regex.Matches(args.Data, @"^frame=\s+\d+\s.+?time=(\d{2}:\d{2}:\d{2}\.\d{2}).+");
