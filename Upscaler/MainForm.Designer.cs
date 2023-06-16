@@ -220,10 +220,10 @@
             this.realisticRadioButton.AutoSize = true;
             this.realisticRadioButton.Location = new System.Drawing.Point(103, 3);
             this.realisticRadioButton.Name = "realisticRadioButton";
-            this.realisticRadioButton.Size = new System.Drawing.Size(68, 19);
+            this.realisticRadioButton.Size = new System.Drawing.Size(72, 19);
             this.realisticRadioButton.TabIndex = 3;
             this.realisticRadioButton.TabStop = true;
-            this.realisticRadioButton.Text = "Realistic";
+            this.realisticRadioButton.Text = "Standard";
             this.realisticRadioButton.UseVisualStyleBackColor = true;
             // 
             // label2
@@ -292,8 +292,8 @@
             this.scaleLevelLabel.Name = "scaleLevelLabel";
             this.scaleLevelLabel.Size = new System.Drawing.Size(760, 15);
             this.scaleLevelLabel.TabIndex = 1;
-            this.scaleLevelLabel.Text = "What level of upscaling would you like to use? X4 will upscale it to 4 times its " +
-    "resolution, but will take much longer than x2";
+            this.scaleLevelLabel.Text = "What level of upscaling would you like to use? X2 will upscale it to 2 times its " +
+    "resolution, X4 to 4 times";
             this.scaleLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // videoBreakProgressBar
