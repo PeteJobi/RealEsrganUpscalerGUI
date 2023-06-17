@@ -313,6 +313,7 @@ namespace Upscaler
         void Cancel()
         {
             currentProcess.Kill();
+            currentProcess.WaitForExit();
             hasBeenKilled = true;
             cancelButton.Click -= CancelButton_Click;
             Reset(null, EventArgs.Empty);
