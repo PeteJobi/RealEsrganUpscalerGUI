@@ -148,12 +148,12 @@ namespace Upscaler
                             IncrementBreakMergeProgress(TimeSpan.Parse(matchCollection[0].Groups[1].Value), videoData.Duration, currentFileIndex, totalFilesCount, false);
                         }
                     });
+                    if (HasBeenKilled()) return false;
                     videoData.TotalFrames = Directory.GetFiles(frameFolders.InputFolder).Length;
                     currentFrame = 0;
                     videoData.Model = GetModel(true);
                     videoData.Scale = GetScale();
                     await SaveVideoData(videoData, frameFolders.InputFolder);
-                    if (HasBeenKilled()) return false;
                 }                
                 IncrementBreakMergeProgress(videoData.Duration, videoData.Duration, currentFileIndex, totalFilesCount, false);
                 #endregion
@@ -316,6 +316,7 @@ namespace Upscaler
             currentProcess.WaitForExit();
             hasBeenKilled = true;
             cancelButton.Click -= CancelButton_Click;
+            pauseButton.Click -= pauseButton_Click;
             Reset(null, EventArgs.Empty);
             currentProcess = null;
             if(frameFolders != null)
