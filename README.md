@@ -1,20 +1,23 @@
 # Real-ESRGAN Upscaler GUI
 This repo provides a simple GUI for upscaling images and videos, based on [Real-ESRGAN ncnn Vulkan](https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan), with features for pausing/canceling and performing bulk upscale operations on multiple files or folder contents. Only supports Windows 10 and 11 (not tested on other versions of Windows).
 
-![image](https://github.com/PeteJobi/RealEsrganUpscalerGUI/assets/45200292/4f86df2b-3f42-425b-8322-71d227a7d770)
+![image](https://github.com/PeteJobi/RealEsrganUpscalerGUI/assets/45200292/64a9fe61-c75f-47ba-bebb-a45e815dc2fe)
 ![image](https://github.com/PeteJobi/RealEsrganUpscalerGUI/assets/45200292/0be83e9a-5039-4a10-88a6-1ae94db904ab)
 
 
 ## How to build
-You need to have DotNet 6 runtime installed to build or run the software. Download the latest runtime [here](https://dotnet.microsoft.com/en-us/download). If you're not sure which one to download, try [.NET 6.0 Version 6.0.16](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-6.0.408-windows-x64-installer)
+You need to have at least .NET 6 runtime installed to build the software. Download the latest runtime [here](https://dotnet.microsoft.com/en-us/download). If you're not sure which one to download, try [.NET 6.0 Version 6.0.16](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-6.0.408-windows-x64-installer)
 
 In the project folder, run the below
 ```
 dotnet publish -p:PublishSingleFile=true -r win-x64 -c Release --self-contained false
 ```
-When that completes, go to `\bin\Release\net6.0-windows\win-x64\publish` and you'll find the **Upscaler.exe** amongst other files. All the files are necessary for the software to run properly. Run **Upscaler.exe** to use the software.
+When that completes, go to `\bin\Release\net<version>-windows\win-x64\publish` and you'll find the **Upscaler.exe** amongst other files. All the files are necessary for the software to run properly. Run **Upscaler.exe** to use the software.
 
-You can also just download the release build, which contains all published files.
+## Run without building
+You can also just download the release builds if you don't wish to build manually. The assets release contains the assets used by the software. The standard release contains the compiled executable. Download them both, extract the assets to a folder and drop the executable in that folder.
+
+If you wish to run the software without installing the required .NET runtime, download the self-contained release.
 
 ## How to use
 The file types supported are ".mkv", ".mp4", ".jpg", ".jpeg" and ".png". The software decides automatically if the file to be upscaled is an image or a video.
