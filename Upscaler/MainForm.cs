@@ -59,7 +59,7 @@ namespace Upscaler
             string[] filePaths;
             if (folder)
             {
-                filePaths = Directory.GetFiles(paths[0]).Where(p => allowedExts.Contains(Path.GetExtension(p))).ToArray();
+                filePaths = Directory.GetFiles(paths[0]).Where(p => allowedExts.Contains(Path.GetExtension(p).ToLower())).ToArray();
                 if (filePaths.Length == 0)
                 {
                     MessageBox.Show("The selected folder does not contain any supported files");
@@ -68,7 +68,7 @@ namespace Upscaler
             }
             else
             {
-                filePaths = paths.Where(p => allowedExts.Contains(Path.GetExtension(p))).ToArray();
+                filePaths = paths.Where(p => allowedExts.Contains(Path.GetExtension(p).ToLower())).ToArray();
                 if(filePaths.Length == 0)
                 {
                     MessageBox.Show("None of the dropped files are supported");
@@ -115,7 +115,7 @@ namespace Upscaler
                 #region Break video into frames
                 ResetVideoUpscaleUI(true);
                 frameFolders = GetFrameFolders(fileName);
-                VideoData videoData = new ();
+                VideoData videoData = new();
                 int currentFrame;
                 if (frameFolders.AlreadyExists)
                 {
@@ -131,7 +131,7 @@ namespace Upscaler
                         if (string.IsNullOrWhiteSpace(args.Data)) return;
                         if (videoData.Duration == TimeSpan.MinValue)
                         {
-                            MatchCollection matchCollection = Regex.Matches(args.Data, @"\s+?Duration:\s(\d{2}:\d{2}:\d{2}\.\d{2}).+");
+                            MatchCollection matchCollection = Regex.Matches(args.Data, @"\s*Duration:\s(\d{2}:\d{2}:\d{2}\.\d{2}).+");
                             if (matchCollection.Count == 0) return;
                             videoData.Duration = TimeSpan.Parse(matchCollection[0].Groups[1].Value);
                         }
@@ -143,7 +143,7 @@ namespace Upscaler
                         }
                         else
                         {
-                            MatchCollection matchCollection = Regex.Matches(args.Data, @"^frame=\s+\d+\s.+?time=(\d{2}:\d{2}:\d{2}\.\d{2}).+");
+                            MatchCollection matchCollection = Regex.Matches(args.Data, @"^frame=\s*\d+\s.+?time=(\d{2}:\d{2}:\d{2}\.\d{2}).+");
                             if (matchCollection.Count == 0) return;
                             IncrementBreakMergeProgress(TimeSpan.Parse(matchCollection[0].Groups[1].Value), videoData.Duration, currentFileIndex, totalFilesCount, false);
                         }
@@ -154,7 +154,7 @@ namespace Upscaler
                     videoData.Model = GetModel(true);
                     videoData.Scale = GetScale();
                     await SaveVideoData(videoData, frameFolders.InputFolder);
-                }                
+                }
                 IncrementBreakMergeProgress(videoData.Duration, videoData.Duration, currentFileIndex, totalFilesCount, false);
                 #endregion
 
@@ -182,10 +182,10 @@ namespace Upscaler
                 string outputName = GetOutputName(fileName);
                 File.Delete(outputName);
                 isMergingVideo = true;
-                await StartProcess(ffmpegPath, $"-r {videoData.FPS} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1 -map -1:v -c:a copy -c:v libx264 -r {videoData.FPS} -pix_fmt yuv420p \"{outputName}\"", null, (sender, args) =>
+                await StartProcess(ffmpegPath, $"-r {videoData.FPS} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1 -map -1:v -max_interleave_delta 0 -c:a copy -c:v libx264 -r {videoData.FPS} -vf scale=out_color_matrix=bt709,format=yuv420p \"{outputName}\"", null, (sender, args) =>
                 {
                     if (string.IsNullOrWhiteSpace(args.Data)) return;
-                    MatchCollection matchCollection = Regex.Matches(args.Data, @"^frame=\s+\d+\s.+?time=(\d{2}:\d{2}:\d{2}\.\d{2}).+");
+                    MatchCollection matchCollection = Regex.Matches(args.Data, @"^frame=\s*\d+\s.+?time=(\d{2}:\d{2}:\d{2}\.\d{2}).+");
                     if (matchCollection.Count == 0) return;
                     IncrementBreakMergeProgress(TimeSpan.Parse(matchCollection[0].Groups[1].Value), videoData.Duration, currentFileIndex, totalFilesCount, true);
                 });
