@@ -270,6 +270,7 @@ namespace Upscaler
         {
             currentProcess = null;
             UpdateTotalFileCountLabel(fileCount, fileCount);
+            overallProgressBar.Value = overallProgressBar.Maximum;
             currentActionLabel.Text = "Done";
             cancelButton.Text = "Retry";
             cancelButton.Click -= CancelButton_Click;
