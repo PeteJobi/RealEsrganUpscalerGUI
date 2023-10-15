@@ -23,6 +23,7 @@ namespace Upscaler
         bool isUpscalingVideo, isMergingVideo;
         const string UPSCALED_PREFIX = "_UPSCALED";
         const string VIDEO_DATA_NAME = "data";
+        const int FULL_NONVIDEO_HEIGHT = 375;
         public MainForm()
         {
             InitializeComponent();
@@ -69,7 +70,7 @@ namespace Upscaler
             else
             {
                 filePaths = paths.Where(p => allowedExts.Contains(Path.GetExtension(p).ToLower())).ToArray();
-                if(filePaths.Length == 0)
+                if (filePaths.Length == 0)
                 {
                     MessageBox.Show("None of the dropped files are supported");
                     return;
@@ -81,7 +82,7 @@ namespace Upscaler
             fileNameLabel.Show();
             mediaTypePanel.Enabled = false;
             scaleLevelPanel.Enabled = false;
-            Height = 380;
+            Height = FULL_NONVIDEO_HEIGHT;
 
             isProcessingFolder = folder;
             pathForView = isProcessingFolder ? paths[0] + UPSCALED_PREFIX : GetOutputName(paths[0]);
@@ -171,7 +172,8 @@ namespace Upscaler
                         {
                             if (args.Data == "0.00%") currentFrame++;
                             IncrementUpscaleProgress(args.Data[0..^1], currentFrame - 1, videoData.TotalFrames, currentFileIndex, totalFilesCount, true);
-                        }else if(Regex.IsMatch(args.Data, @"encode image .+? failed"))
+                        }
+                        else if (Regex.IsMatch(args.Data, @"encode image .+? failed"))
                         {
                             SuspendProcess(currentProcess);
                             MessageBox.Show($"Failed to upscale frame.\nError message: {args.Data}");
@@ -190,7 +192,9 @@ namespace Upscaler
                 string outputName = GetOutputName(fileName);
                 File.Delete(outputName);
                 isMergingVideo = true;
-                await StartProcess(ffmpegPath, $"-r {videoData.FPS} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1 -map -1:v -max_interleave_delta 0 -c:a copy -c:v libx264 -r {videoData.FPS} -vf scale=out_color_matrix=bt709,format=yuv420p \"{outputName}\"", null, (sender, args) =>
+                string fpsToEncode = fps24checkBox.Checked ? "23.976" : videoData.FPS;
+                fps24checkBox.Enabled = false;
+                await StartProcess(ffmpegPath, $"-r {fpsToEncode} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1 -map -1:v -max_interleave_delta 0 -c:a copy -c:v libx264 -r {fpsToEncode} -vf scale=out_color_matrix=bt709,format=yuv420p \"{outputName}\"", null, (sender, args) =>
                 {
                     if (string.IsNullOrWhiteSpace(args.Data) || hasBeenKilled) return;
                     if (CheckNoSpaceDuringBreakMerge(args.Data)) return;
@@ -204,6 +208,7 @@ namespace Upscaler
                 IncrementBreakMergeProgress(videoData.Duration, videoData.Duration, currentFileIndex, totalFilesCount, true);
                 Directory.Delete(frameFolders.InputFolder, true);
                 Directory.Delete(frameFolders.OutputFolder, true);
+                fps24checkBox.Enabled = true;
                 frameFolders = null;
                 #endregion
             }
@@ -218,7 +223,7 @@ namespace Upscaler
                         IncrementUpscaleProgress(args.Data[0..^1], 0, 1, currentFileIndex, totalFilesCount, false);
                     }
                 });
-                if(HasBeenKilled()) return false;
+                if (HasBeenKilled()) return false;
                 IncrementUpscaleProgress("100", 0, 1, currentFileIndex, totalFilesCount, false);
             }
 
@@ -229,7 +234,7 @@ namespace Upscaler
         {
             Invoke(() =>
             {
-                if(!double.TryParse(percentString, out double percent))
+                if (!double.TryParse(percentString, out double percent))
                 {
                     MessageBox.Show($"Something went wrong with the operation\n\n{percentString}");
                     Cancel();
@@ -238,7 +243,7 @@ namespace Upscaler
                 progressLabel.Text = $"{percent}%";
                 if (isVideo) progressLabel.Text = $"{currentFrame}/{totalFrames} frames: " + progressLabel.Text;
                 currentActionLabel.Text = isVideo ? "Upscaling video frames..." : "Upscaling...";
-                if(isVideo) videoUpscaleProgresslabel.Text = $"{Math.Round((double)currentFrame / totalFrames * 100, 2)} %";
+                if (isVideo) videoUpscaleProgresslabel.Text = $"{Math.Round((double)currentFrame / totalFrames * 100, 2)} %";
                 int unusedSegmentForOverall = isVideo ? (int)(progressMax / (totalFilesCount * breakMergeSegmentFactor)) : 0;
                 int usedSegmentForOverall = progressMax / totalFilesCount - (unusedSegmentForOverall * 2);
                 currentActionProgressBar.Value = Math.Min(progressMax, (int)((double)currentFrame / totalFrames * progressMax) + (int)(percent / 100 * (progressMax / totalFrames)));
@@ -253,15 +258,15 @@ namespace Upscaler
         {
             Invoke(() =>
             {
-                if(currentTime > totalDuration) currentTime = totalDuration;
+                if (currentTime > totalDuration) currentTime = totalDuration;
                 progressLabel.Text = $"{currentTime:hh\\:mm\\:ss}/{totalDuration:hh\\:mm\\:ss}: {Math.Round(currentTime / totalDuration * 100, 2)} %";
                 currentActionLabel.Text = isMerging ? "Merging frames into video..." : "Breaking video into frames...";
                 int breakMergeProgressMaxForOverall = (int)((double)progressMax / (totalFilesCount * breakMergeSegmentFactor));
                 //currentActionProgressBar.Value = (isMerging ? (progressMax - breakMergeProgressMax) : 0) + (int)(currentTime / totalDuration * breakMergeProgressMax);
                 ProgressBar progressBarToEdit = isMerging ? videoMergeProgressBar : videoBreakProgressBar;
                 progressBarToEdit.Value = (int)(currentTime / totalDuration * progressMax);
-                overallProgressBar.Value = (int)((double)currentFileIndex / totalFilesCount * progressMax) 
-                    + (isMerging ? ((progressMax / totalFilesCount) - breakMergeProgressMaxForOverall) : 0) 
+                overallProgressBar.Value = (int)((double)currentFileIndex / totalFilesCount * progressMax)
+                    + (isMerging ? ((progressMax / totalFilesCount) - breakMergeProgressMaxForOverall) : 0)
                     + (int)(currentTime / totalDuration * breakMergeProgressMaxForOverall);
             });
         }
@@ -278,11 +283,11 @@ namespace Upscaler
             pauseButton.Text = "View";
             pauseButton.Click -= pauseButton_Click;
             pauseButton.Click += ViewFiles;
+            Height = FULL_NONVIDEO_HEIGHT;
         }
 
         private void Reset(object? sender, EventArgs e)
         {
-            Height = 230;
             totalFileCountLabel.Text = string.Empty;
             currentFileLabel.Text = string.Empty;
             currentActionLabel.Text = string.Empty;
@@ -301,12 +306,14 @@ namespace Upscaler
             mediaTypePanel.Enabled = true;
             scaleLevelPanel.Enabled = true;
             ResetVideoUpscaleUI(true);
+            Height = 230;
         }
 
         void ResetVideoUpscaleUI(bool show)
         {
             currentActionProgressBar.Left = show ? 80 : overallProgressBar.Left;
             currentActionProgressBar.Width = show ? 532 : overallProgressBar.Width;
+            Height = show ? 400 : FULL_NONVIDEO_HEIGHT;
             currentActionProgressBar.Value = 0;
             videoUpscaleProgresslabel.Visible = show;
             videoBreakProgressBar.Visible = show;
@@ -324,13 +331,13 @@ namespace Upscaler
         void Cancel(bool dontWaitForExit = false)
         {
             currentProcess.Kill();
-            if(!dontWaitForExit) currentProcess.WaitForExit();
+            if (!dontWaitForExit) currentProcess.WaitForExit();
             hasBeenKilled = true;
             cancelButton.Click -= CancelButton_Click;
             pauseButton.Click -= pauseButton_Click;
             Reset(null, EventArgs.Empty);
             currentProcess = null;
-            if(frameFolders != null)
+            if (frameFolders != null)
             {
                 Directory.Delete(frameFolders.InputFolder, true);
                 Directory.Delete(frameFolders.OutputFolder, true);
@@ -363,7 +370,7 @@ namespace Upscaler
             const string caption = "Save video upscale task";
             if (!isPaused) SuspendProcess(currentProcess);
             var result = MessageBox.Show(message, caption, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if(result == DialogResult.Yes) frameFolders = null;
+            if (result == DialogResult.Yes) frameFolders = null;
             if (result == DialogResult.Cancel && !isPaused) ResumeProcess(currentProcess);
             return result != DialogResult.Cancel;
         }
@@ -412,14 +419,14 @@ namespace Upscaler
 
         int GetScale()
         {
-            if(x2radioButton.Checked) return 2;
-            if(x3radioButton.Checked) return 3;
+            if (x2radioButton.Checked) return 2;
+            if (x3radioButton.Checked) return 3;
             return 4;
         }
 
         bool CheckNoSpaceDuringBreakMerge(string line)
         {
-            if(!line.EndsWith("No space left on device") && !line.EndsWith("I/O error")) return false;
+            if (!line.EndsWith("No space left on device") && !line.EndsWith("I/O error")) return false;
             SuspendProcess(currentProcess);
             MessageBox.Show($"Process failed.\nError message: {line}");
             frameFolders = null;
@@ -429,7 +436,7 @@ namespace Upscaler
 
         async Task StartProcess(string processFileName, string arguments, DataReceivedEventHandler? outputEventHandler, DataReceivedEventHandler? errorEventHandler)
         {
-            Process esrgan = new ()
+            Process esrgan = new()
             {
                 StartInfo = new ProcessStartInfo()
                 {
@@ -464,7 +471,7 @@ namespace Upscaler
         {
             string inputName = Path.GetFileNameWithoutExtension(path);
             string parentFolder = Path.GetDirectoryName(path) ?? throw new FileNotFoundException($"The specified path does not exist: {path}");
-            if(isProcessingFolder) parentFolder += UPSCALED_PREFIX;
+            if (isProcessingFolder) parentFolder += UPSCALED_PREFIX;
             FrameFolders frameFolders = new(Path.Combine(parentFolder, $"{inputName}_InputFrames"), Path.Combine(parentFolder, $"{inputName}_OutputFrames"));
             if (Directory.Exists(frameFolders.InputFolder) && Directory.Exists(frameFolders.OutputFolder) && File.Exists(Path.Combine(frameFolders.InputFolder, VIDEO_DATA_NAME)))
             {
@@ -477,7 +484,7 @@ namespace Upscaler
         }
         async Task SaveVideoData(VideoData videoData, string inputFolder)
         {
-            using StreamWriter writer = new (File.Create(Path.Combine(inputFolder, VIDEO_DATA_NAME)));
+            using StreamWriter writer = new(File.Create(Path.Combine(inputFolder, VIDEO_DATA_NAME)));
             await writer.WriteLineAsync(videoData.FPS);
             await writer.WriteLineAsync(videoData.TotalFrames.ToString());
             await writer.WriteLineAsync(videoData.Duration.ToString());
@@ -486,14 +493,15 @@ namespace Upscaler
         }
         async Task UpdateVideoData(string inputFolder)
         {
-            using StreamWriter writer = new (File.Open(Path.Combine(inputFolder, VIDEO_DATA_NAME), FileMode.Open));
+            using StreamWriter writer = new(File.Open(Path.Combine(inputFolder, VIDEO_DATA_NAME), FileMode.Open));
             writer.BaseStream.Position = writer.BaseStream.Length;
             await writer.WriteLineAsync("Finished");
         }
         async Task<VideoData> ReadVideoData(string inputFolder)
         {
-            using StreamReader reader = new (File.OpenRead(Path.Combine(inputFolder, VIDEO_DATA_NAME)));
-            return new VideoData {
+            using StreamReader reader = new(File.OpenRead(Path.Combine(inputFolder, VIDEO_DATA_NAME)));
+            return new VideoData
+            {
                 FPS = await reader.ReadLineAsync(),
                 TotalFrames = int.Parse(await reader.ReadLineAsync()),
                 Duration = TimeSpan.Parse(await reader.ReadLineAsync()),
@@ -596,7 +604,7 @@ namespace Upscaler
         {
             if (!fileDialogPanel.Visible) return;
             string[]? files = ((string[]?)e.Data?.GetData(DataFormats.FileDrop, false));
-            if(files?.Length < 1) return;
+            if (files?.Length < 1) return;
             if (Path.GetExtension(files[0]) == string.Empty) await PrepareFiles(files[0..1], true);
             else await PrepareFiles(files, false);
         }

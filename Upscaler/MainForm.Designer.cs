@@ -29,340 +29,360 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.fileDialogPanel = new System.Windows.Forms.Panel();
-            this.selectFolderButton = new System.Windows.Forms.Button();
-            this.selectFilesButton = new System.Windows.Forms.Button();
-            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.fileNameLabel = new System.Windows.Forms.Label();
-            this.overallProgressBar = new System.Windows.Forms.ProgressBar();
-            this.cancelButton = new System.Windows.Forms.Button();
-            this.currentActionProgressBar = new System.Windows.Forms.ProgressBar();
-            this.pauseButton = new System.Windows.Forms.Button();
-            this.totalFileCountLabel = new System.Windows.Forms.Label();
-            this.currentFileLabel = new System.Windows.Forms.Label();
-            this.progressLabel = new System.Windows.Forms.Label();
-            this.currentActionLabel = new System.Windows.Forms.Label();
-            this.selectLabel = new System.Windows.Forms.Label();
-            this.animeRadioButton = new System.Windows.Forms.RadioButton();
-            this.mediaTypePanel = new System.Windows.Forms.Panel();
-            this.realisticRadioButton = new System.Windows.Forms.RadioButton();
-            this.label2 = new System.Windows.Forms.Label();
-            this.scaleLevelPanel = new System.Windows.Forms.Panel();
-            this.x4radioButton = new System.Windows.Forms.RadioButton();
-            this.x3radioButton = new System.Windows.Forms.RadioButton();
-            this.x2radioButton = new System.Windows.Forms.RadioButton();
-            this.scaleLevelLabel = new System.Windows.Forms.Label();
-            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
-            this.videoBreakProgressBar = new System.Windows.Forms.ProgressBar();
-            this.videoMergeProgressBar = new System.Windows.Forms.ProgressBar();
-            this.videoUpscaleProgresslabel = new System.Windows.Forms.Label();
-            this.fileDialogPanel.SuspendLayout();
-            this.mediaTypePanel.SuspendLayout();
-            this.scaleLevelPanel.SuspendLayout();
-            this.SuspendLayout();
+            fileDialogPanel = new Panel();
+            selectFolderButton = new Button();
+            selectFilesButton = new Button();
+            openFileDialog = new OpenFileDialog();
+            fileNameLabel = new Label();
+            overallProgressBar = new ProgressBar();
+            cancelButton = new Button();
+            currentActionProgressBar = new ProgressBar();
+            pauseButton = new Button();
+            totalFileCountLabel = new Label();
+            currentFileLabel = new Label();
+            progressLabel = new Label();
+            currentActionLabel = new Label();
+            selectLabel = new Label();
+            animeRadioButton = new RadioButton();
+            mediaTypePanel = new Panel();
+            realisticRadioButton = new RadioButton();
+            label2 = new Label();
+            scaleLevelPanel = new Panel();
+            x4radioButton = new RadioButton();
+            x3radioButton = new RadioButton();
+            x2radioButton = new RadioButton();
+            scaleLevelLabel = new Label();
+            folderBrowserDialog = new FolderBrowserDialog();
+            videoBreakProgressBar = new ProgressBar();
+            videoMergeProgressBar = new ProgressBar();
+            videoUpscaleProgresslabel = new Label();
+            fps24checkBox = new CheckBox();
+            fps24Label = new Label();
+            fileDialogPanel.SuspendLayout();
+            mediaTypePanel.SuspendLayout();
+            scaleLevelPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // fileDialogPanel
             // 
-            this.fileDialogPanel.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.fileDialogPanel.Controls.Add(this.selectFolderButton);
-            this.fileDialogPanel.Controls.Add(this.selectFilesButton);
-            this.fileDialogPanel.Location = new System.Drawing.Point(290, 12);
-            this.fileDialogPanel.Name = "fileDialogPanel";
-            this.fileDialogPanel.Size = new System.Drawing.Size(213, 30);
-            this.fileDialogPanel.TabIndex = 0;
+            fileDialogPanel.Anchor = AnchorStyles.Top;
+            fileDialogPanel.Controls.Add(selectFolderButton);
+            fileDialogPanel.Controls.Add(selectFilesButton);
+            fileDialogPanel.Location = new Point(290, 12);
+            fileDialogPanel.Name = "fileDialogPanel";
+            fileDialogPanel.Size = new Size(213, 30);
+            fileDialogPanel.TabIndex = 0;
             // 
             // selectFolderButton
             // 
-            this.selectFolderButton.Location = new System.Drawing.Point(109, 3);
-            this.selectFolderButton.Name = "selectFolderButton";
-            this.selectFolderButton.Size = new System.Drawing.Size(100, 23);
-            this.selectFolderButton.TabIndex = 1;
-            this.selectFolderButton.Text = "Select folder";
-            this.selectFolderButton.UseVisualStyleBackColor = true;
-            this.selectFolderButton.Click += new System.EventHandler(this.SelectFolderButton_Click);
+            selectFolderButton.Location = new Point(109, 3);
+            selectFolderButton.Name = "selectFolderButton";
+            selectFolderButton.Size = new Size(100, 23);
+            selectFolderButton.TabIndex = 1;
+            selectFolderButton.Text = "Select folder";
+            selectFolderButton.UseVisualStyleBackColor = true;
+            selectFolderButton.Click += SelectFolderButton_Click;
             // 
             // selectFilesButton
             // 
-            this.selectFilesButton.Location = new System.Drawing.Point(3, 3);
-            this.selectFilesButton.Name = "selectFilesButton";
-            this.selectFilesButton.Size = new System.Drawing.Size(100, 23);
-            this.selectFilesButton.TabIndex = 0;
-            this.selectFilesButton.Text = "Select files";
-            this.selectFilesButton.UseVisualStyleBackColor = true;
-            this.selectFilesButton.Click += new System.EventHandler(this.SelectFile_Click);
+            selectFilesButton.Location = new Point(3, 3);
+            selectFilesButton.Name = "selectFilesButton";
+            selectFilesButton.Size = new Size(100, 23);
+            selectFilesButton.TabIndex = 0;
+            selectFilesButton.Text = "Select files";
+            selectFilesButton.UseVisualStyleBackColor = true;
+            selectFilesButton.Click += SelectFile_Click;
             // 
             // fileNameLabel
             // 
-            this.fileNameLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.fileNameLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fileNameLabel.Location = new System.Drawing.Point(12, 16);
-            this.fileNameLabel.Name = "fileNameLabel";
-            this.fileNameLabel.Size = new System.Drawing.Size(760, 22);
-            this.fileNameLabel.TabIndex = 1;
-            this.fileNameLabel.Text = "File Name";
-            this.fileNameLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.fileNameLabel.Visible = false;
+            fileNameLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            fileNameLabel.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            fileNameLabel.Location = new Point(12, 16);
+            fileNameLabel.Name = "fileNameLabel";
+            fileNameLabel.Size = new Size(760, 22);
+            fileNameLabel.TabIndex = 1;
+            fileNameLabel.Text = "File Name";
+            fileNameLabel.TextAlign = ContentAlignment.TopCenter;
+            fileNameLabel.Visible = false;
             // 
             // overallProgressBar
             // 
-            this.overallProgressBar.Location = new System.Drawing.Point(12, 229);
-            this.overallProgressBar.Name = "overallProgressBar";
-            this.overallProgressBar.Size = new System.Drawing.Size(668, 21);
-            this.overallProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.overallProgressBar.TabIndex = 2;
+            overallProgressBar.Location = new Point(12, 229);
+            overallProgressBar.Name = "overallProgressBar";
+            overallProgressBar.Size = new Size(668, 21);
+            overallProgressBar.Style = ProgressBarStyle.Continuous;
+            overallProgressBar.TabIndex = 2;
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(697, 229);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 21);
-            this.cancelButton.TabIndex = 7;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = true;
+            cancelButton.Location = new Point(697, 229);
+            cancelButton.Name = "cancelButton";
+            cancelButton.Size = new Size(75, 21);
+            cancelButton.TabIndex = 7;
+            cancelButton.Text = "Cancel";
+            cancelButton.UseVisualStyleBackColor = true;
             // 
             // currentActionProgressBar
             // 
-            this.currentActionProgressBar.Location = new System.Drawing.Point(12, 301);
-            this.currentActionProgressBar.Name = "currentActionProgressBar";
-            this.currentActionProgressBar.Size = new System.Drawing.Size(668, 21);
-            this.currentActionProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.currentActionProgressBar.TabIndex = 2;
+            currentActionProgressBar.Location = new Point(12, 301);
+            currentActionProgressBar.Name = "currentActionProgressBar";
+            currentActionProgressBar.Size = new Size(668, 21);
+            currentActionProgressBar.Style = ProgressBarStyle.Continuous;
+            currentActionProgressBar.TabIndex = 2;
             // 
             // pauseButton
             // 
-            this.pauseButton.Location = new System.Drawing.Point(697, 301);
-            this.pauseButton.Name = "pauseButton";
-            this.pauseButton.Size = new System.Drawing.Size(75, 21);
-            this.pauseButton.TabIndex = 8;
-            this.pauseButton.Text = "Pause";
-            this.pauseButton.UseVisualStyleBackColor = true;
+            pauseButton.Location = new Point(697, 301);
+            pauseButton.Name = "pauseButton";
+            pauseButton.Size = new Size(75, 21);
+            pauseButton.TabIndex = 8;
+            pauseButton.Text = "Pause";
+            pauseButton.UseVisualStyleBackColor = true;
             // 
             // totalFileCountLabel
             // 
-            this.totalFileCountLabel.AutoSize = true;
-            this.totalFileCountLabel.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.totalFileCountLabel.Location = new System.Drawing.Point(12, 211);
-            this.totalFileCountLabel.Name = "totalFileCountLabel";
-            this.totalFileCountLabel.Size = new System.Drawing.Size(34, 12);
-            this.totalFileCountLabel.TabIndex = 4;
-            this.totalFileCountLabel.Text = "21/181";
-            this.totalFileCountLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            totalFileCountLabel.AutoSize = true;
+            totalFileCountLabel.Font = new Font("Segoe UI", 7F, FontStyle.Regular, GraphicsUnit.Point);
+            totalFileCountLabel.Location = new Point(12, 211);
+            totalFileCountLabel.Name = "totalFileCountLabel";
+            totalFileCountLabel.Size = new Size(34, 12);
+            totalFileCountLabel.TabIndex = 4;
+            totalFileCountLabel.Text = "21/181";
+            totalFileCountLabel.TextAlign = ContentAlignment.BottomLeft;
             // 
             // currentFileLabel
             // 
-            this.currentFileLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.currentFileLabel.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.currentFileLabel.Location = new System.Drawing.Point(360, 204);
-            this.currentFileLabel.Name = "currentFileLabel";
-            this.currentFileLabel.Size = new System.Drawing.Size(320, 20);
-            this.currentFileLabel.TabIndex = 4;
-            this.currentFileLabel.Text = "spiderman.png";
-            this.currentFileLabel.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            currentFileLabel.Anchor = AnchorStyles.Top;
+            currentFileLabel.Font = new Font("Segoe UI", 7F, FontStyle.Regular, GraphicsUnit.Point);
+            currentFileLabel.Location = new Point(360, 204);
+            currentFileLabel.Name = "currentFileLabel";
+            currentFileLabel.Size = new Size(320, 20);
+            currentFileLabel.TabIndex = 4;
+            currentFileLabel.Text = "spiderman.png";
+            currentFileLabel.TextAlign = ContentAlignment.BottomRight;
             // 
             // progressLabel
             // 
-            this.progressLabel.AutoSize = true;
-            this.progressLabel.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.progressLabel.Location = new System.Drawing.Point(12, 286);
-            this.progressLabel.Name = "progressLabel";
-            this.progressLabel.Size = new System.Drawing.Size(34, 12);
-            this.progressLabel.TabIndex = 4;
-            this.progressLabel.Text = "21/181";
-            this.progressLabel.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            progressLabel.AutoSize = true;
+            progressLabel.Font = new Font("Segoe UI", 7F, FontStyle.Regular, GraphicsUnit.Point);
+            progressLabel.Location = new Point(12, 286);
+            progressLabel.Name = "progressLabel";
+            progressLabel.Size = new Size(34, 12);
+            progressLabel.TabIndex = 4;
+            progressLabel.Text = "21/181";
+            progressLabel.TextAlign = ContentAlignment.BottomLeft;
             // 
             // currentActionLabel
             // 
-            this.currentActionLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.currentActionLabel.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.currentActionLabel.Location = new System.Drawing.Point(440, 278);
-            this.currentActionLabel.Name = "currentActionLabel";
-            this.currentActionLabel.Size = new System.Drawing.Size(240, 20);
-            this.currentActionLabel.TabIndex = 4;
-            this.currentActionLabel.Text = "Breaking video into frames";
-            this.currentActionLabel.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            currentActionLabel.Anchor = AnchorStyles.Top;
+            currentActionLabel.Font = new Font("Segoe UI", 7F, FontStyle.Regular, GraphicsUnit.Point);
+            currentActionLabel.Location = new Point(440, 278);
+            currentActionLabel.Name = "currentActionLabel";
+            currentActionLabel.Size = new Size(240, 20);
+            currentActionLabel.TabIndex = 4;
+            currentActionLabel.Text = "Breaking video into frames";
+            currentActionLabel.TextAlign = ContentAlignment.BottomRight;
             // 
             // selectLabel
             // 
-            this.selectLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.selectLabel.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.selectLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.selectLabel.Location = new System.Drawing.Point(12, 40);
-            this.selectLabel.Name = "selectLabel";
-            this.selectLabel.Size = new System.Drawing.Size(760, 15);
-            this.selectLabel.TabIndex = 1;
-            this.selectLabel.Text = "Selecting a folder will upscale every image/video in that folder";
-            this.selectLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            selectLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            selectLabel.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
+            selectLabel.ForeColor = SystemColors.ControlDarkDark;
+            selectLabel.Location = new Point(12, 40);
+            selectLabel.Name = "selectLabel";
+            selectLabel.Size = new Size(760, 15);
+            selectLabel.TabIndex = 1;
+            selectLabel.Text = "Selecting a folder will upscale every image/video in that folder";
+            selectLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // animeRadioButton
             // 
-            this.animeRadioButton.AutoSize = true;
-            this.animeRadioButton.Location = new System.Drawing.Point(3, 3);
-            this.animeRadioButton.Name = "animeRadioButton";
-            this.animeRadioButton.Size = new System.Drawing.Size(81, 19);
-            this.animeRadioButton.TabIndex = 2;
-            this.animeRadioButton.TabStop = true;
-            this.animeRadioButton.Text = "Animation";
-            this.animeRadioButton.UseVisualStyleBackColor = true;
+            animeRadioButton.AutoSize = true;
+            animeRadioButton.Location = new Point(3, 3);
+            animeRadioButton.Name = "animeRadioButton";
+            animeRadioButton.Size = new Size(81, 19);
+            animeRadioButton.TabIndex = 2;
+            animeRadioButton.TabStop = true;
+            animeRadioButton.Text = "Animation";
+            animeRadioButton.UseVisualStyleBackColor = true;
             // 
             // mediaTypePanel
             // 
-            this.mediaTypePanel.Controls.Add(this.realisticRadioButton);
-            this.mediaTypePanel.Controls.Add(this.animeRadioButton);
-            this.mediaTypePanel.Location = new System.Drawing.Point(310, 71);
-            this.mediaTypePanel.Name = "mediaTypePanel";
-            this.mediaTypePanel.Size = new System.Drawing.Size(174, 27);
-            this.mediaTypePanel.TabIndex = 6;
+            mediaTypePanel.Controls.Add(realisticRadioButton);
+            mediaTypePanel.Controls.Add(animeRadioButton);
+            mediaTypePanel.Location = new Point(310, 71);
+            mediaTypePanel.Name = "mediaTypePanel";
+            mediaTypePanel.Size = new Size(174, 27);
+            mediaTypePanel.TabIndex = 6;
             // 
             // realisticRadioButton
             // 
-            this.realisticRadioButton.AutoSize = true;
-            this.realisticRadioButton.Location = new System.Drawing.Point(103, 3);
-            this.realisticRadioButton.Name = "realisticRadioButton";
-            this.realisticRadioButton.Size = new System.Drawing.Size(72, 19);
-            this.realisticRadioButton.TabIndex = 3;
-            this.realisticRadioButton.TabStop = true;
-            this.realisticRadioButton.Text = "Standard";
-            this.realisticRadioButton.UseVisualStyleBackColor = true;
+            realisticRadioButton.AutoSize = true;
+            realisticRadioButton.Location = new Point(103, 3);
+            realisticRadioButton.Name = "realisticRadioButton";
+            realisticRadioButton.Size = new Size(72, 19);
+            realisticRadioButton.TabIndex = 3;
+            realisticRadioButton.TabStop = true;
+            realisticRadioButton.Text = "Standard";
+            realisticRadioButton.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label2.Location = new System.Drawing.Point(12, 95);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(760, 15);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "What kind of image/video are you upscaling?";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            label2.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
+            label2.ForeColor = SystemColors.ControlDarkDark;
+            label2.Location = new Point(12, 95);
+            label2.Name = "label2";
+            label2.Size = new Size(760, 15);
+            label2.TabIndex = 1;
+            label2.Text = "What kind of image/video are you upscaling?";
+            label2.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // scaleLevelPanel
             // 
-            this.scaleLevelPanel.Controls.Add(this.x4radioButton);
-            this.scaleLevelPanel.Controls.Add(this.x3radioButton);
-            this.scaleLevelPanel.Controls.Add(this.x2radioButton);
-            this.scaleLevelPanel.Location = new System.Drawing.Point(327, 130);
-            this.scaleLevelPanel.Name = "scaleLevelPanel";
-            this.scaleLevelPanel.Size = new System.Drawing.Size(132, 27);
-            this.scaleLevelPanel.TabIndex = 6;
+            scaleLevelPanel.Controls.Add(x4radioButton);
+            scaleLevelPanel.Controls.Add(x3radioButton);
+            scaleLevelPanel.Controls.Add(x2radioButton);
+            scaleLevelPanel.Location = new Point(327, 130);
+            scaleLevelPanel.Name = "scaleLevelPanel";
+            scaleLevelPanel.Size = new Size(132, 27);
+            scaleLevelPanel.TabIndex = 6;
             // 
             // x4radioButton
             // 
-            this.x4radioButton.AutoSize = true;
-            this.x4radioButton.Location = new System.Drawing.Point(89, 3);
-            this.x4radioButton.Name = "x4radioButton";
-            this.x4radioButton.Size = new System.Drawing.Size(38, 19);
-            this.x4radioButton.TabIndex = 6;
-            this.x4radioButton.TabStop = true;
-            this.x4radioButton.Text = "X4";
-            this.x4radioButton.UseVisualStyleBackColor = true;
+            x4radioButton.AutoSize = true;
+            x4radioButton.Location = new Point(89, 3);
+            x4radioButton.Name = "x4radioButton";
+            x4radioButton.Size = new Size(38, 19);
+            x4radioButton.TabIndex = 6;
+            x4radioButton.TabStop = true;
+            x4radioButton.Text = "X4";
+            x4radioButton.UseVisualStyleBackColor = true;
             // 
             // x3radioButton
             // 
-            this.x3radioButton.AutoSize = true;
-            this.x3radioButton.Location = new System.Drawing.Point(48, 3);
-            this.x3radioButton.Name = "x3radioButton";
-            this.x3radioButton.Size = new System.Drawing.Size(38, 19);
-            this.x3radioButton.TabIndex = 5;
-            this.x3radioButton.TabStop = true;
-            this.x3radioButton.Text = "X3";
-            this.x3radioButton.UseVisualStyleBackColor = true;
+            x3radioButton.AutoSize = true;
+            x3radioButton.Location = new Point(48, 3);
+            x3radioButton.Name = "x3radioButton";
+            x3radioButton.Size = new Size(38, 19);
+            x3radioButton.TabIndex = 5;
+            x3radioButton.TabStop = true;
+            x3radioButton.Text = "X3";
+            x3radioButton.UseVisualStyleBackColor = true;
             // 
             // x2radioButton
             // 
-            this.x2radioButton.AutoSize = true;
-            this.x2radioButton.Location = new System.Drawing.Point(3, 3);
-            this.x2radioButton.Name = "x2radioButton";
-            this.x2radioButton.Size = new System.Drawing.Size(38, 19);
-            this.x2radioButton.TabIndex = 4;
-            this.x2radioButton.TabStop = true;
-            this.x2radioButton.Text = "X2";
-            this.x2radioButton.UseVisualStyleBackColor = true;
+            x2radioButton.AutoSize = true;
+            x2radioButton.Location = new Point(3, 3);
+            x2radioButton.Name = "x2radioButton";
+            x2radioButton.Size = new Size(38, 19);
+            x2radioButton.TabIndex = 4;
+            x2radioButton.TabStop = true;
+            x2radioButton.Text = "X2";
+            x2radioButton.UseVisualStyleBackColor = true;
             // 
             // scaleLevelLabel
             // 
-            this.scaleLevelLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.scaleLevelLabel.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.scaleLevelLabel.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.scaleLevelLabel.Location = new System.Drawing.Point(12, 155);
-            this.scaleLevelLabel.Name = "scaleLevelLabel";
-            this.scaleLevelLabel.Size = new System.Drawing.Size(760, 15);
-            this.scaleLevelLabel.TabIndex = 1;
-            this.scaleLevelLabel.Text = "What level of upscaling would you like to use? X2 will upscale it to 2 times its " +
-    "resolution, X4 to 4 times";
-            this.scaleLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            scaleLevelLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            scaleLevelLabel.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
+            scaleLevelLabel.ForeColor = SystemColors.ControlDarkDark;
+            scaleLevelLabel.Location = new Point(12, 155);
+            scaleLevelLabel.Name = "scaleLevelLabel";
+            scaleLevelLabel.Size = new Size(760, 15);
+            scaleLevelLabel.TabIndex = 1;
+            scaleLevelLabel.Text = "What level of upscaling would you like to use? X2 will upscale it to 2 times its resolution, X4 to 4 times";
+            scaleLevelLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // videoBreakProgressBar
             // 
-            this.videoBreakProgressBar.Location = new System.Drawing.Point(12, 301);
-            this.videoBreakProgressBar.Name = "videoBreakProgressBar";
-            this.videoBreakProgressBar.Size = new System.Drawing.Size(67, 21);
-            this.videoBreakProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.videoBreakProgressBar.TabIndex = 2;
+            videoBreakProgressBar.Location = new Point(12, 301);
+            videoBreakProgressBar.Name = "videoBreakProgressBar";
+            videoBreakProgressBar.Size = new Size(67, 21);
+            videoBreakProgressBar.Style = ProgressBarStyle.Continuous;
+            videoBreakProgressBar.TabIndex = 2;
             // 
             // videoMergeProgressBar
             // 
-            this.videoMergeProgressBar.Location = new System.Drawing.Point(613, 301);
-            this.videoMergeProgressBar.Name = "videoMergeProgressBar";
-            this.videoMergeProgressBar.Size = new System.Drawing.Size(67, 21);
-            this.videoMergeProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.videoMergeProgressBar.TabIndex = 2;
+            videoMergeProgressBar.Location = new Point(613, 301);
+            videoMergeProgressBar.Name = "videoMergeProgressBar";
+            videoMergeProgressBar.Size = new Size(67, 21);
+            videoMergeProgressBar.Style = ProgressBarStyle.Continuous;
+            videoMergeProgressBar.TabIndex = 2;
             // 
             // videoUpscaleProgresslabel
             // 
-            this.videoUpscaleProgresslabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.videoUpscaleProgresslabel.Font = new System.Drawing.Font("Segoe UI", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.videoUpscaleProgresslabel.Location = new System.Drawing.Point(204, 278);
-            this.videoUpscaleProgresslabel.Name = "videoUpscaleProgresslabel";
-            this.videoUpscaleProgresslabel.Size = new System.Drawing.Size(295, 20);
-            this.videoUpscaleProgresslabel.TabIndex = 4;
-            this.videoUpscaleProgresslabel.Text = "33.33%";
-            this.videoUpscaleProgresslabel.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            videoUpscaleProgresslabel.Anchor = AnchorStyles.Top;
+            videoUpscaleProgresslabel.Font = new Font("Segoe UI", 7F, FontStyle.Regular, GraphicsUnit.Point);
+            videoUpscaleProgresslabel.Location = new Point(204, 278);
+            videoUpscaleProgresslabel.Name = "videoUpscaleProgresslabel";
+            videoUpscaleProgresslabel.Size = new Size(295, 20);
+            videoUpscaleProgresslabel.TabIndex = 4;
+            videoUpscaleProgresslabel.Text = "33.33%";
+            videoUpscaleProgresslabel.TextAlign = ContentAlignment.BottomCenter;
+            // 
+            // fps24checkBox
+            // 
+            fps24checkBox.AutoSize = true;
+            fps24checkBox.Location = new Point(12, 335);
+            fps24checkBox.Name = "fps24checkBox";
+            fps24checkBox.Size = new Size(115, 19);
+            fps24checkBox.TabIndex = 9;
+            fps24checkBox.Text = "Encode in 24 FPS";
+            fps24checkBox.UseVisualStyleBackColor = true;
+            // 
+            // fps24Label
+            // 
+            fps24Label.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            fps24Label.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
+            fps24Label.ForeColor = SystemColors.ControlDarkDark;
+            fps24Label.Location = new Point(126, 335);
+            fps24Label.Name = "fps24Label";
+            fps24Label.Size = new Size(554, 15);
+            fps24Label.TabIndex = 1;
+            fps24Label.Text = "If the upscaled video is out of sync with the audio, try it again and check this box before it merges.";
+            fps24Label.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // MainForm
             // 
-            this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 341);
-            this.Controls.Add(this.scaleLevelPanel);
-            this.Controls.Add(this.mediaTypePanel);
-            this.Controls.Add(this.videoUpscaleProgresslabel);
-            this.Controls.Add(this.currentActionLabel);
-            this.Controls.Add(this.currentFileLabel);
-            this.Controls.Add(this.progressLabel);
-            this.Controls.Add(this.totalFileCountLabel);
-            this.Controls.Add(this.pauseButton);
-            this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.videoMergeProgressBar);
-            this.Controls.Add(this.videoBreakProgressBar);
-            this.Controls.Add(this.currentActionProgressBar);
-            this.Controls.Add(this.overallProgressBar);
-            this.Controls.Add(this.scaleLevelLabel);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.selectLabel);
-            this.Controls.Add(this.fileNameLabel);
-            this.Controls.Add(this.fileDialogPanel);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.Name = "MainForm";
-            this.Text = "Real-ESRGAN Upscaler";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
-            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
-            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
-            this.fileDialogPanel.ResumeLayout(false);
-            this.mediaTypePanel.ResumeLayout(false);
-            this.mediaTypePanel.PerformLayout();
-            this.scaleLevelPanel.ResumeLayout(false);
-            this.scaleLevelPanel.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AllowDrop = true;
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(784, 361);
+            Controls.Add(fps24checkBox);
+            Controls.Add(scaleLevelPanel);
+            Controls.Add(mediaTypePanel);
+            Controls.Add(videoUpscaleProgresslabel);
+            Controls.Add(currentActionLabel);
+            Controls.Add(currentFileLabel);
+            Controls.Add(progressLabel);
+            Controls.Add(totalFileCountLabel);
+            Controls.Add(pauseButton);
+            Controls.Add(cancelButton);
+            Controls.Add(videoMergeProgressBar);
+            Controls.Add(videoBreakProgressBar);
+            Controls.Add(currentActionProgressBar);
+            Controls.Add(overallProgressBar);
+            Controls.Add(fps24Label);
+            Controls.Add(scaleLevelLabel);
+            Controls.Add(label2);
+            Controls.Add(selectLabel);
+            Controls.Add(fileNameLabel);
+            Controls.Add(fileDialogPanel);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            Name = "MainForm";
+            Text = "Real-ESRGAN Upscaler";
+            FormClosing += MainForm_FormClosing;
+            DragDrop += MainForm_DragDrop;
+            DragEnter += MainForm_DragEnter;
+            fileDialogPanel.ResumeLayout(false);
+            mediaTypePanel.ResumeLayout(false);
+            mediaTypePanel.PerformLayout();
+            scaleLevelPanel.ResumeLayout(false);
+            scaleLevelPanel.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -394,5 +414,7 @@
         private ProgressBar videoBreakProgressBar;
         private ProgressBar videoMergeProgressBar;
         private Label videoUpscaleProgresslabel;
+        private CheckBox fps24checkBox;
+        private Label fps24Label;
     }
 }
