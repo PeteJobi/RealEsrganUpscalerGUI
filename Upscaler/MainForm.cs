@@ -6,8 +6,8 @@ namespace Upscaler
 {
     public partial class MainForm : Form
     {
-        const string realEsrganPath = @"realesrgan-ncnn-vulkan.exe";
-        const string ffmpegPath = @"ffmpeg.exe";
+        const string realEsrganPath = "realesrgan-ncnn-vulkan.exe";
+        const string ffmpegPath = "ffmpeg.exe";
         const int progressMax = 1_000_000;
         const int breakMergeSegmentFactor = 10; //The parts of the overall progress dedicated to breaking videos and merging frames. Assuming progressMax is 100, 10 means 10-80-10 and 5 means 5-90-5
         static readonly string[] imageExts = new[] { ".jpg", ".jpeg", ".png" };
@@ -40,7 +40,7 @@ namespace Upscaler
 
         private async void SelectFile_Click(object sender, EventArgs e)
         {
-            openFileDialog.Title = "Select one or multiple images and/or videos";
+            openFileDialog.Title = $"Select one or multiple images{(videoSupported ? " and/or videos" : "")}";
             openFileDialog.Filter = $"Image {(videoSupported ? "and Video " : "")}Files|" + string.Join(";", allowedExts.Select(e => $"*{e}"));
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() != DialogResult.OK) return;
@@ -88,10 +88,10 @@ namespace Upscaler
             pathForView = isProcessingFolder ? paths[0] + UPSCALED_PREFIX : GetOutputName(paths[0]);
             fileNameLabel.Text = Path.GetFileName(paths[0]);
             if (paths.Length > 1) fileNameLabel.Text += $" and {paths.Length - 1} others";
-            ProcessFiles(filePaths);
+            await ProcessFiles(filePaths);
         }
 
-        async void ProcessFiles(string[] fileNames)
+        async Task ProcessFiles(string[] fileNames)
         {
             bool canceled = false;
             for (int i = 0; i < fileNames.Length; i++)
@@ -470,7 +470,7 @@ namespace Upscaler
         FrameFolders GetFrameFolders(string path)
         {
             string inputName = Path.GetFileNameWithoutExtension(path);
-            string parentFolder = Path.GetDirectoryName(path) ?? throw new FileNotFoundException($"The specified path does not exist: {path}");
+            string parentFolder = Path.GetDirectoryName(path) ?? throw new NullReferenceException("The specified path is null");
             if (isProcessingFolder) parentFolder += UPSCALED_PREFIX;
             FrameFolders frameFolders = new(Path.Combine(parentFolder, $"{inputName}_InputFrames"), Path.Combine(parentFolder, $"{inputName}_OutputFrames"));
             if (Directory.Exists(frameFolders.InputFolder) && Directory.Exists(frameFolders.OutputFolder) && File.Exists(Path.Combine(frameFolders.InputFolder, VIDEO_DATA_NAME)))
