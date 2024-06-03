@@ -10,8 +10,8 @@ namespace Upscaler
         const string ffmpegPath = "ffmpeg.exe";
         const int progressMax = 1_000_000;
         const int breakMergeSegmentFactor = 10; //The parts of the overall progress dedicated to breaking videos and merging frames. Assuming progressMax is 100, 10 means 10-80-10 and 5 means 5-90-5
-        static readonly string[] imageExts = new[] { ".jpg", ".jpeg", ".png" };
-        static readonly string[] videoExts = new[] { ".mkv", ".mp4" };
+        static readonly string[] imageExts = { ".jpg", ".jpeg", ".png" };
+        static readonly string[] videoExts = { ".mkv", ".mp4" };
         readonly string[] allowedExts = imageExts;
         bool videoSupported;
         bool hasBeenKilled;
@@ -30,11 +30,17 @@ namespace Upscaler
             realisticRadioButton.Checked = true;
             x2radioButton.Checked = true;
             overallProgressBar.Maximum = currentActionProgressBar.Maximum = videoBreakProgressBar.Maximum = videoMergeProgressBar.Maximum = progressMax;
+            const string CHECK_INSTR = "Please check the github page for usage instructions. https://github.com/PeteJobi/RealEsrganUpscalerGUI";
+            if (!File.Exists(realEsrganPath) || !Directory.Exists("models"))
+            {
+                MessageBox.Show($"You don't have all the assets required to use this program. {CHECK_INSTR}", "Assets missing", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
             if (File.Exists(ffmpegPath))
             {
                 videoSupported = true;
                 allowedExts = allowedExts.Concat(videoExts).ToArray();
             }
+            else MessageBox.Show($"FFMPEG.EXE not detected. Upscaling video files will not be possible without FFMPEG. {CHECK_INSTR}", "FFMPEG.EXE missing", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             Reset(null, EventArgs.Empty);
         }
 
@@ -194,7 +200,7 @@ namespace Upscaler
                 isMergingVideo = true;
                 string fpsToEncode = fps24checkBox.Checked ? "23.976" : videoData.FPS;
                 fps24checkBox.Enabled = false;
-                await StartProcess(ffmpegPath, $"-r {fpsToEncode} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1 -map -1:v -max_interleave_delta 0 -c:a copy -c:v libx264 -r {fpsToEncode} -vf scale=out_color_matrix=bt709,format=yuv420p \"{outputName}\"", null, (sender, args) =>
+                await StartProcess(ffmpegPath, $"-r {fpsToEncode} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1 -map -1:v -map_chapters 1 -max_interleave_delta 0 -c:a copy -c:v libx264 -r {fpsToEncode} -vf scale=out_color_matrix=bt709,format=yuv420p \"{outputName}\"", null, (sender, args) =>
                 {
                     if (string.IsNullOrWhiteSpace(args.Data) || hasBeenKilled) return;
                     if (CheckNoSpaceDuringBreakMerge(args.Data)) return;
