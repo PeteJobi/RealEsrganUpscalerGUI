@@ -27,10 +27,10 @@ namespace Upscaler
         const int FULL_NONVIDEO_HEIGHT = 375;
         private IFileLogger fileLogger;
 
-        public MainForm()
+        public MainForm(IFileLogger fileLogger)
         {
             InitializeComponent();
-            fileLogger = new FileLogger.FileLogger("RealEsrganUpscalerGUI");
+            this.fileLogger = fileLogger;
             realisticRadioButton.Checked = true;
             x2radioButton.Checked = true;
             overallProgressBar.Maximum = currentActionProgressBar.Maximum = videoBreakProgressBar.Maximum = videoMergeProgressBar.Maximum = progressMax;

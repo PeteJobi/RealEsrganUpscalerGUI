@@ -1,7 +1,10 @@
+using FileLogger;
+
 namespace Upscaler
 {
     internal static class Program
     {
+        private static IFileLogger fileLogger;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -10,17 +13,21 @@ namespace Upscaler
         {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            AppDomain currentDomain = AppDomain.CurrentDomain;
-            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(ExceptionHandler);
+            var currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += ExceptionHandler;
 
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainForm());
-        }
+            fileLogger = new FileLogger.FileLogger("RealEsrganUpscalerGUI");
+            Application.Run(new MainForm(fileLogger));
+            return;
 
-        static void ExceptionHandler(object sender, UnhandledExceptionEventArgs args)
-        {
-            Exception e = (Exception)args.ExceptionObject;
-            MessageBox.Show($"An error occurred\n\n{e}");
+            void ExceptionHandler(object sender, UnhandledExceptionEventArgs args)
+            {
+                var e = (Exception)args.ExceptionObject;
+                var error = $"An error occurred\n\n{e}";
+                fileLogger.Log(error);
+                MessageBox.Show(error);
+            }
         }
     }
 }
