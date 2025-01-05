@@ -95,4 +95,10 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="FileLogger">
+      <HintPath>dlls\FileLogger.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
