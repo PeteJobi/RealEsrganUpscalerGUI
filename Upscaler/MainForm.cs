@@ -200,20 +200,29 @@ namespace Upscaler
                 isMergingVideo = true;
                 string fpsToEncode = fps24checkBox.Checked ? "23.976" : videoData.FPS;
                 fps24checkBox.Enabled = false;
-                await StartProcess(ffmpegPath, $"-r {fpsToEncode} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1 -map -1:v -map_chapters 1 -max_interleave_delta 0 -c:a copy -c:v libx264 -r {fpsToEncode} -vf scale=out_color_matrix=bt709,format=yuv420p \"{outputName}\"", null, (sender, args) =>
+                var mergeActuallyStarted = false;
+                await StartProcess(ffmpegPath, $"-r {fpsToEncode} -i \"{frameFolders.OutputFolder}/frame%08d.png\" -i \"{fileName}\" -map 0:v:0 -map 1 -map -1:v -map_chapters 1 -max_interleave_delta 0 -c:a copy -c:s copy -c:v libx264 -r {fpsToEncode} -vf scale=out_color_matrix=bt709,format=yuv420p \"{outputName}\"", null, (sender, args) =>
                 {
                     if (string.IsNullOrWhiteSpace(args.Data) || hasBeenKilled) return;
                     if (CheckNoSpaceDuringBreakMerge(args.Data)) return;
                     MatchCollection matchCollection = Regex.Matches(args.Data, @"^frame=\s*\d+\s.+?time=(\d{2}:\d{2}:\d{2}\.\d{2}).+");
                     if (matchCollection.Count == 0) return;
+                    mergeActuallyStarted = true;
                     IncrementBreakMergeProgress(TimeSpan.Parse(matchCollection[0].Groups[1].Value), videoData.Duration, currentFileIndex, totalFilesCount, true);
                 });
                 isMergingVideo = false;
                 if (HasBeenKilled()) return false;
 
+                if (mergeActuallyStarted)
+                {
                 IncrementBreakMergeProgress(videoData.Duration, videoData.Duration, currentFileIndex, totalFilesCount, true);
                 Directory.Delete(frameFolders.InputFolder, true);
                 Directory.Delete(frameFolders.OutputFolder, true);
+                }
+                else
+                {
+                    MessageBox.Show($"The merge process for \"{fileNameLabel.Text}\" was unsuccessful.", "Something went wrong", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 fps24checkBox.Enabled = true;
                 frameFolders = null;
                 #endregion
