@@ -96,9 +96,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="FileLogger">
-      <HintPath>dlls\FileLogger.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\FileLogger\FileLogger\FileLogger.csproj" />
   </ItemGroup>
 
 </Project>

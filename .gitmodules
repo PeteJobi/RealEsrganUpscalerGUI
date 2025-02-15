@@ -1,0 +1,3 @@
+[submodule "FileLogger"]
+	path = FileLogger
+	url = https://github.com/PeteJobi/FileLogger.git
