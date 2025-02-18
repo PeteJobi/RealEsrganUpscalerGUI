@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using FileLogger;
 
@@ -508,7 +509,7 @@ namespace Upscaler
 
         FrameFolders GetFrameFolders(string path)
         {
-            string inputName = Path.GetFileNameWithoutExtension(path);
+            string inputName = MakeUnicodePrintable(Path.GetFileNameWithoutExtension(path));
             string parentFolder = Path.GetDirectoryName(path) ?? throw new NullReferenceException("The specified path is null");
             if (isProcessingFolder) parentFolder += UPSCALED_PREFIX;
             FrameFolders frameFolders = new(Path.Combine(parentFolder, $"{inputName}_InputFrames"), Path.Combine(parentFolder, $"{inputName}_OutputFrames"));
@@ -567,6 +568,21 @@ namespace Upscaler
             }
 
             return resumeIndex + i;
+        }
+
+        string MakeUnicodePrintable(string unicode)
+        {
+            //This method turns UTF-16 text into UTF-8 for compatibility with real-esrgan. See issue #7 
+            var bytes = Encoding.UTF8.GetBytes(unicode);
+            for (var i = 0; i < bytes.Length; i++)
+            {
+                var byteVal = bytes[i];
+                if (byteVal < 33) byteVal += 33; //characters less than 33 (excluding space (32)) are unprintable
+                else if (byteVal is > 126 and < 161) byteVal = (byte)(161 + byteVal - 126); //characters between 126 and 161 (excluding Non-breaking space (160)) are unprintable
+                bytes[i] = byteVal;
+            }
+
+            return new string(bytes.Select(b => (char)b).ToArray());
         }
 
         [Flags]
