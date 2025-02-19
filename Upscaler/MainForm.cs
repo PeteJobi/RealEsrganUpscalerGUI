@@ -122,9 +122,10 @@ namespace Upscaler
             if (!canceled) AllDone(fileNames.Length);
         }
 
-        async Task<bool> UpscaleFile(string fileName, int currentFileIndex, int totalFilesCount)
+        private async Task<bool> UpscaleFile(string fileName, int currentFileIndex, int totalFilesCount)
         {
             fileLogger.Log($"Processing {currentFileLabel.Text}");
+            var time = DateTime.Now;
             string extension = Path.GetExtension(fileName);
             if (videoExts.Contains(extension.ToLower()))
             {
@@ -182,7 +183,9 @@ namespace Upscaler
                 if (!videoData.FinishedUpscale)
                 {
                     isUpscalingVideo = true;
-                    await StartProcess(realEsrganPath, $"-i \"{frameFolders.InputFolder}\" -o \"{frameFolders.OutputFolder}\" -n {videoData.Model} -s {videoData.Scale} -f png", null, (sender, args) =>
+                    var gpuUsage = higherGPUCheckBox.Checked ? "-j 10:10:10" : string.Empty;
+                    higherGPUCheckBox.Enabled = false;
+                    await StartProcess(realEsrganPath, $"-i \"{frameFolders.InputFolder}\" -o \"{frameFolders.OutputFolder}\" -n {videoData.Model} -s {videoData.Scale} -f png {gpuUsage}", null, (sender, args) =>
                     {
                         if (string.IsNullOrWhiteSpace(args.Data) || hasBeenKilled) return;
                         if (Regex.IsMatch(args.Data, @"\d+.\d+%"))
@@ -243,7 +246,10 @@ namespace Upscaler
                     fileLogger.Log("Something went wrong");
                 }
                 fps24checkBox.Enabled = true;
+                higherGPUCheckBox.Enabled = true;
                 frameFolders = null;
+                var timeSpan = DateTime.Now - time;
+                fileLogger.Log($"Time taken to process {fileName}: {timeSpan}");
                 #endregion
             }
             else
@@ -353,7 +359,7 @@ namespace Upscaler
         {
             currentActionProgressBar.Left = show ? 80 : overallProgressBar.Left;
             currentActionProgressBar.Width = show ? 532 : overallProgressBar.Width;
-            Height = show ? 400 : FULL_NONVIDEO_HEIGHT;
+            Height = show ? 420 : FULL_NONVIDEO_HEIGHT;
             currentActionProgressBar.Value = 0;
             videoUpscaleProgresslabel.Visible = show;
             videoBreakProgressBar.Visible = show;
@@ -587,7 +593,7 @@ namespace Upscaler
         }
 
         [Flags]
-        public enum ThreadAccess : int
+        public enum ThreadAccess
         {
             SUSPEND_RESUME = (0x0002)
         }

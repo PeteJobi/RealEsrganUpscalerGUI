@@ -58,6 +58,8 @@
             videoUpscaleProgresslabel = new Label();
             fps24checkBox = new CheckBox();
             fps24Label = new Label();
+            higherGPUCheckBox = new CheckBox();
+            highGPULabel = new Label();
             fileDialogPanel.SuspendLayout();
             mediaTypePanel.SuspendLayout();
             scaleLevelPanel.SuspendLayout();
@@ -342,12 +344,36 @@
             fps24Label.Text = "If the upscaled video is out of sync with the audio, try it again and check this box before it merges.";
             fps24Label.TextAlign = ContentAlignment.MiddleLeft;
             // 
+            // higherGPUCheckBox
+            // 
+            higherGPUCheckBox.AutoSize = true;
+            higherGPUCheckBox.Location = new Point(12, 357);
+            higherGPUCheckBox.Name = "higherGPUCheckBox";
+            higherGPUCheckBox.Size = new Size(122, 19);
+            higherGPUCheckBox.TabIndex = 10;
+            higherGPUCheckBox.Text = "Higher GPU usage";
+            higherGPUCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // highGPULabel
+            // 
+            highGPULabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            highGPULabel.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
+            highGPULabel.ForeColor = SystemColors.ControlDarkDark;
+            highGPULabel.Location = new Point(126, 357);
+            highGPULabel.Name = "highGPULabel";
+            highGPULabel.Size = new Size(554, 15);
+            highGPULabel.TabIndex = 11;
+            highGPULabel.Text = "Click this before the upscale starts for faster processing.";
+            highGPULabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
             // MainForm
             // 
             AllowDrop = true;
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(784, 361);
+            ClientSize = new Size(784, 381);
+            Controls.Add(highGPULabel);
+            Controls.Add(higherGPUCheckBox);
             Controls.Add(fps24checkBox);
             Controls.Add(scaleLevelPanel);
             Controls.Add(mediaTypePanel);
@@ -416,5 +442,7 @@
         private Label videoUpscaleProgresslabel;
         private CheckBox fps24checkBox;
         private Label fps24Label;
+        private CheckBox higherGPUCheckBox;
+        private Label highGPULabel;
     }
 }
