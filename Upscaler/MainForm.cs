@@ -138,7 +138,7 @@ namespace Upscaler
                     videoUpscaleProgresslabel.Text = "Resuming...";
                     videoData = await ReadVideoData(frameFolders.InputFolder);
                     currentFrame = videoData.FinishedUpscale ? 0 : PrepareVideoResumption(frameFolders, videoData.TotalFrames);
-                    fileLogger.Log($"{videoUpscaleProgresslabel.Text} {videoData.Model} {videoData.Scale} {videoData.Duration} {videoData.FPS} {videoData.TotalFrames} {videoData.FinishedUpscale}");
+                    fileLogger.Log($"Resuming.... {videoUpscaleProgresslabel.Text} {videoData.Model} {videoData.Scale} {videoData.Duration} {videoData.FPS} {videoData.TotalFrames} {videoData.FinishedUpscale}");
                 }
                 else
                 {
@@ -509,7 +509,7 @@ namespace Upscaler
 
         FrameFolders GetFrameFolders(string path)
         {
-            string inputName = MakeUnicodePrintable(Path.GetFileNameWithoutExtension(path));
+            string inputName = UnicodeToAscii(Path.GetFileNameWithoutExtension(path));
             string parentFolder = Path.GetDirectoryName(path) ?? throw new NullReferenceException("The specified path is null");
             if (isProcessingFolder) parentFolder += UPSCALED_PREFIX;
             FrameFolders frameFolders = new(Path.Combine(parentFolder, $"{inputName}_InputFrames"), Path.Combine(parentFolder, $"{inputName}_OutputFrames"));
@@ -570,16 +570,17 @@ namespace Upscaler
             return resumeIndex + i;
         }
 
-        string MakeUnicodePrintable(string unicode)
+        string UnicodeToAscii(string unicode)
         {
-            //This method turns UTF-16 text into UTF-8 for compatibility with real-esrgan. See issue #7 
+            //This method turns UTF-16 text into ASCII for compatibility with real-esrgan. See issue #7 
+            var chars = Enumerable.Range(65, 26).Concat(Enumerable.Range(97, 26)).ToArray(); //A-Z and a-z
             var bytes = Encoding.UTF8.GetBytes(unicode);
             for (var i = 0; i < bytes.Length; i++)
             {
                 var byteVal = bytes[i];
-                if (byteVal < 33) byteVal += 33; //characters less than 33 (excluding space (32)) are unprintable
-                else if (byteVal is > 126 and < 161) byteVal = (byte)(161 + byteVal - 126); //characters between 126 and 161 (excluding Non-breaking space (160)) are unprintable
-                bytes[i] = byteVal;
+                if (byteVal is >= 32 and <= 126) continue; //if character is ASCII, don't do anything
+
+                bytes[i] = (byte)chars[byteVal % chars.Length]; //convert to an ASCII character
             }
 
             return new string(bytes.Select(b => (char)b).ToArray());
